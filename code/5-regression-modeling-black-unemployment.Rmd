@@ -1,5 +1,5 @@
 ---
-title: "5-regression-modeling-unemploy"
+title: "5-regression-modeling-black-unemploy"
 author: "Ashley Clarke"
 date: "12/14/2021"
 output: html_document
@@ -17,36 +17,35 @@ library(glmnetUtils)  # for running ridge and lasso
 library(ISLR2)        # necessary for College data 
 library(pROC)         # for ROC curves
 library(tidyverse)  
+library(dplyr)
 ```
 
 # Read in the test and training data
 
 ```{r}
 # load the data
-setwd("~/Desktop/STAT471/unemployment-project")
-unemploy_train = read_tsv(file = "data/clean/econ_train.tsv")
-unemploy_test = read_tsv(file = "data/clean/econ_test.tsv")
-variable_names = read_tsv(file = "data/clean/var_names.tsv")
+unemploy_train = read_tsv(file = "~/Desktop/STAT471/unemployment-project/data/clean/econ_train.tsv")
+unemploy_test = read_tsv(file = "~/Desktop/STAT471/unemployment-project/data/clean/econ_test.tsv")
+variable_names = read_tsv(file = "~/Desktop/STAT471/unemployment-project/data/clean/var_names.tsv")
 
 # install.packages("scales")              # dependency of plot_glmnet
-source("code/functions/plot_glmnet.R")
-
+source("~/Desktop/STAT471/unemployment-project/code/functions/plot_glmnet.R")
 ```
 
-Now we will build some predictive models for `percent_dif_unemploy`. I will remove the `date`, `black_unemployment`, and `unemployment_rate` variables from the training and test sets since it is not a feature we will be using for prediction:
+Now we will build some predictive models for `black_unemployment`. I will remove the `date`, `unemployment_rate`, and `percent_dif_unemploy` variables from the training and test sets since it is not a feature we will be using for prediction:
 ```{r}
-unemploy_train= unemploy_train %>% select(-c(date, black_unemployment, percent_dif_unemploy))
-unemploy_test = unemploy_test %>% select(-c(date, black_unemployment, percent_dif_unemploy))
+unemploy_train = unemploy_train %>% select(-c(date, unemployment_rate, percent_dif_unemploy))
+unemploy_test = unemploy_test %>% select(-c(date, unemployment_rate, percent_dif_unemploy))
 ```
 
-# Run linear regression
+# Run least-squares/ linear regression
 
 ```{r lm-fit, echo=FALSE}
 #run linear regression
-lm_fit = lm(unemployment_rate ~ ., data = unemploy_train)
-r_squared_lm = summary(lm_fit)$r.squared
+lm_fit_black = lm(black_unemployment ~ ., data = unemploy_train)
+r_squared_lm = summary(lm_fit_black)$r.squared
 # save the linear regression fit object
-save(lm_fit, file = "~/Desktop/STAT471/unemployment-project/results/ridge_fit.Rda")
+save(lm_fit_black , file = "~/Desktop/STAT471/unemployment-project/results/lm_fit_black.Rda")
 ```
 
 # Run ridge regression
@@ -54,17 +53,19 @@ save(lm_fit, file = "~/Desktop/STAT471/unemployment-project/results/ridge_fit.Rd
 ```{r ridge-fit, echo=FALSE}
 #run ridge fit
 set.seed(3) # set seed before cross-validation for reproducibility
-ridge_fit = cv.glmnet(unemployment_rate ~ ., alpha = 0, nfolds = 10, data = unemploy_train) 
-plot(ridge_fit)
+ridge_fit_black = cv.glmnet(black_unemployment ~ ., alpha = 0, nfolds = 10, data = unemploy_train) 
+plot(ridge_fit_black)
 
 #lambda use 1se rule 
-lambda = ridge_fit$lambda.1se
+lambda = ridge_fit_black$lambda.1se
 sprintf("The value of lambda based on the one-standard-error rule: %f",
         lambda)
 
 #Visualize the ridge regression fitted coefficients, highlighting 6 features using the `features_to_plot` argument
 #Consider: do any features changes signs as lambda increases
-plot_glmnet(ridge_fit, unemploy_train, features_to_plot = 6)
+plot_glmnet(ridge_fit_black, unemploy_train, features_to_plot = 6)
+
+save(ridge_fit_black, file = "~/Desktop/STAT471/unemployment-project/results/ridge_fit_black.Rda")
 ```
 
 # Run lasso regression
@@ -72,71 +73,36 @@ plot_glmnet(ridge_fit, unemploy_train, features_to_plot = 6)
 ```{r lasso-fit}
 #run lasso fit
 set.seed(5) # set seed before cross-validation for reproducibility
-lasso_fit = cv.glmnet(unemployment_rate ~ ., alpha = 1, nfolds = 10, data = unemploy_train) 
-plot(lasso_fit)
+lasso_fit_black = cv.glmnet(black_unemployment ~ ., alpha = 1, nfolds = 10, data = unemploy_train) 
+plot(lasso_fit_black)
 
-lambda_lasso = lasso_fit$lambda.1se
+lambda_lasso_black = lasso_fit_black$lambda.1se
 sprintf("The value of lambda based on the one-standard-error rule: %f",
-        lambda_lasso)
+        lambda_lasso_black)
 
 #How many features are selected if features are chosen according to the 1 se rule?
-num_features = lasso_fit$nzero[lasso_fit$lambda == lasso_fit$lambda.1se]
+num_features_black = lasso_fit_black$nzero[lasso_fit_black$lambda == lasso_fit_black$lambda.1se]
 
 #Need to add more colors 
 #Use `plot_glmnet` to visualize the lasso fitted coefficients, which by default will highlight the features selected by the lasso
-plot_glmnet(lasso_fit, unemploy_train)
-```
+plot_glmnet(lasso_fit_black, unemploy_train, features_to_plot = 8)
 
-# Errors for model
-```{r error-for-models-table}
-# generate predictions if guess mean difference
-mean_dif = unemploy_train %>% summarise(mean(unemployment_rate)) %>% pull()
-mean_predictions = rep(mean_dif, nrow(unemploy_test))
-mean_RMSE = sqrt(mean((mean_predictions - unemploy_test$unemployment_rate)^2))
-
-# generate linear model predictions and test error
-linear_predictions = predict(lm_fit, newdata = unemploy_test)
-linear_RMSE = sqrt(mean((linear_predictions - unemploy_test$unemployment_rate)^2))
-
-# generate ridge regression model predictions and test error
-ridge_predictions = predict(ridge_fit, 
-                            newdata = unemploy_test, 
-                            s = "lambda.1se")
-ridge_RMSE = sqrt(mean((ridge_predictions - unemploy_test$unemployment_rate)^2))
-
-# generate lasso regression model predictions and test error
-lasso_predictions = predict(lasso_fit, 
-                            newdata = unemploy_test,
-                            s = "lambda.1se")
-lasso_RMSE = sqrt(mean((lasso_predictions -  unemploy_test$unemployment_rate)^2))
-
-# create table of these three model test errors
-error_for_models = tribble(
-  ~Model, ~RMSE, 
-  #------/------- 
-  "Linear", linear_RMSE,
-  "Ridge", ridge_RMSE,
-  "Lasso", lasso_RMSE,
-  )
-
-# print these metrics in nice table
-error_for_models %>% kable(format = "latex", row.names = NA, 
-                        booktabs = TRUE,
-                        digits = 5,
-                        col.names = c("Model type", 
-                                      "Root mean squared error")) %>%
-  kable_styling(position = "center") %>%
-  kable_styling(latex_options = "HOLD_position")  %>%
-  save_kable(file =
-               "~/Desktop/STAT471/unemployment-project/results/RMSE-models.pdf", 
-             self_contained = T)
+save(lambda_lasso_black, file = "~/Desktop/STAT471/unemployment-project/results/lambda_lasso_black.Rda")
 ```
 
 # Collect Coefficents into a Tibble 
-```{r coefs, echo=FALSE}
+```{r coefs}
 #need to add lasso coefs 
-coeffs = tibble(lm_coef = coef(lm_fit)[-1],
-                ridge_coef = coef(ridge_fit, s = "lambda.1se")[-1,1],
-                features = names(coef(lm_fit)[-1])) 
-coeffs
+lm_coefs_top10 = rownames(data.frame(coef(lm_fit_black)[-1]) %>% 
+  rename(coef = coef.lm_fit_black...1.) %>% arrange(desc(abs(coef))) %>% head(10))
+ridge_coefs_top10 = rownames(data.frame(coef(ridge_fit_black, s = "lambda.1se")[-1,1]) %>% 
+  rename(coef = coef.ridge_fit_black..s....lambda.1se....1..1.) %>% 
+  arrange(desc(abs(coef))) %>% head(10))
+lasso_coefs_top10 = rownames(data.frame(coef(lasso_fit_black, s = "lambda.1se")[-1,1]) %>% 
+  rename(coef = coef.lasso_fit_black..s....lambda.1se....1..1.) %>% 
+  arrange(desc(abs(coef))) %>% head(10))
+
+top_10_by_model = tibble("least_squares" = lm_coefs_top10, 
+                "ridge" = ridge_coefs_top10, 
+                "lasso" = lasso_coefs_top10) 
 ```

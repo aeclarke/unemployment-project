@@ -1,0 +1,109 @@
+---
+title: "5-tree-modeling-unemploy"
+author: "Ashley Clarke"
+date: "12/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load libraries
+```{r, message = FALSE}
+library(kableExtra)   # for printing tables
+library(cowplot)      # for side by side plots
+library(glmnetUtils)  # for running ridge and lasso
+library(ISLR2)        # necessary for College data 
+library(pROC)         # for ROC curves
+library(tidyverse)  
+library(dplyr)
+library(randomForest)        
+library(rpart)             
+library(rpart.plot)        
+```
+
+# Read in the test and training data
+
+```{r}
+# load the data
+unemploy_train = read_tsv(file = "~/Desktop/STAT471/unemployment-project/data/clean/econ_train.tsv")
+unemploy_test = read_tsv(file = "~/Desktop/STAT471/unemployment-project/data/clean/econ_test.tsv")
+variable_names = read_tsv(file = "~/Desktop/STAT471/unemployment-project/data/clean/var_names.tsv")
+# load function
+source("~/Desktop/STAT471/unemployment-project/code/functions/plot_glmnet.R")
+```
+
+Now we will build some predictive models for `unemployment_rate`. I will remove the `date`, `black_unemployment`, and `percent_dif_unemploy` variables from the training and test sets since it is not a feature we will be using for prediction:
+```{r}
+unemploy_train = unemploy_train %>% select(-c(date, black_unemployment, percent_dif_unemploy))
+unemploy_test = unemploy_test %>% select(-c(date, black_unemployment, percent_dif_unemploy))
+```
+
+# Fitting and plotting regression tree
+
+Next, let's actually run the regression tree. The syntax is essentially the same as `lm`, so we get to use the nice formula notation again:
+```{r}
+tree_fit = rpart(unemployment_rate ~ ., data = unemploy_train)
+#which group has highest unemployment?
+rpart.plot(tree_fit)
+tree_fit$variable.importance
+printcp(tree_fit)
+
+save(tree_fit, file = "~/Desktop/STAT471/unemployment-project/results/tree_fit.Rda")
+```
+The exact values of the complexity parameter are not so important; we might as well parameterize the trees based on the number of terminal nodes. Armed with all this information, we can produce a CV plot. The built-in function to produce the CV plot is not as nice as the one built into `cv.glmnet`, so we'll make our own using `ggplot`:
+```{r}
+cp_table = printcp(tree_fit) %>% as_tibble()
+cp_table %>% 
+  ggplot(aes(x = nsplit+1, y = xerror, 
+             ymin = xerror - xstd, ymax = xerror + xstd)) + 
+  geom_point() + geom_line() +
+  geom_errorbar(width = 0.2) +
+  xlab("Number of terminal nodes") + ylab("CV error") + 
+  geom_hline(aes(yintercept = min(xerror)), linetype = "dashed") + 
+  theme_bw()
+
+optimal_tree_info = cp_table %>% 
+  filter(xerror - xstd < min(xerror)) %>% 
+  arrange(nsplit) %>% 
+  head(1)
+optimal_tree_info
+optimal_tree = prune(tree_fit, cp = optimal_tree_info$CP)
+rpart.plot(optimal_tree)
+
+# save the linear regression fit object
+save(optimal_tree, file = "~/Desktop/STAT471/unemployment-project/results/optimal_tree.Rda")
+```
+
+## Training a random forest
+
+To train a random forest with default settings, we use the following syntax:
+```{r}
+rf_fit = randomForest(unemployment_rate ~ ., data = unemploy_train)
+# OOB error as function of number of trees 
+plot(rf_fit)
+
+# might want to cache this chunk!
+set.seed(1)
+mvalues = seq(1,28, by = 2)
+oob_errors = numeric(length(mvalues))
+ntree = 500
+for(idx in 1:length(mvalues)){
+  m = mvalues[idx]
+  rf_fit = randomForest(unemployment_rate ~ ., mtry = m, data = unemploy_train)
+  oob_errors[idx] = rf_fit$mse[ntree]
+}
+tibble(m = mvalues, oob_err = oob_errors) %>%
+  ggplot(aes(x = m, y = oob_err)) + 
+  geom_line() + geom_point() + 
+  scale_x_continuous(breaks = mvalues) +
+  theme_bw()
+
+rf_fit = randomForest(unemployment_rate ~ ., mtry = 19, importance = TRUE, data = unemploy_train)
+rf_fit$importance
+varImpPlot(rf_fit, n.var = 10)
+
+# save the random forest
+save(rf_fit, file = "~/Desktop/STAT471/unemployment-project/results/rf_fit.Rda")
+```
