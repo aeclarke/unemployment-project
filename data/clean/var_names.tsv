@@ -1,0 +1,32 @@
+ID	variable_name	description
+AHECONS	hourly_earnings	Average Hourly Earnings of Production and Nonsupervisory Employees, Construction (hours)
+AWHMAN	hours_production_manufacturing	Average Weekly Hours of Production and Nonsupervisory Employees, Manufacturing (hours)
+AWHNONAG	hours_production_private	Average Weekly Hours of Production and Nonsupervisory Employees, Total Private (hours)
+AWOTMAN	overtime_hours_production	Average Weekly Overtime Hours of Production and Nonsupervisory Employees, Manufacturing (hours)
+CES0600000006	goods_producing_employees	 Production and Nonsupervisory Employees, Goods-Producing
+CES0600000039	women_to_all_goods	Women Employees-To-All Employees Ratio: Goods-Producing
+CES1000000006	employees_mining_logging	Production and Nonsupervisory Employees, Mining and Logging (thousands of persons)
+CES1000000007	hours_production_mining_logging	Average Weekly Hours of Production and Nonsupervisory Employees, Mining and Logging (hours)
+CES1000000010	women_employees_mining_logging	Women Employees, Mining and Logging (thousands of persons)
+CES1000000039	women_to_all_mining_logging	Women Employees-To-All Employees Ratio: Mining and Logging
+CES2000000006	employee_construction	Production and Nonsupervisory Employees, Construction (thousands of persons)
+CES2000000007	hours_production_construction	Average Weekly Hours of Production and Nonsupervisory Employees, Construction (hours)
+CES3100000039	women_to_all_durable_goods	Women Employees-To-All Employees Ratio: Durable Goods.
+CES4142000007	hours_production_wholesale_trade	Average Weekly Hours of Production and Nonsupervisory Employees, Wholesale Trade (hours)
+CES4300000007	hours_production_transport_warehousing	Average Weekly Hours of Production and Nonsupervisory Employees, Transportation and Warehousing (hours)
+CES4422000007	hours_production_ultilites	Average Weekly Hours of Production and Nonsupervisory Employees, Utilities (hours)
+CES5000000007	hours_production_information	Average Weekly Hours of Production and Nonsupervisory Employees, Information (hours)
+CES5000000010	women_employees	Women Employees, Information (thosands of persons)
+CES5500000007	hours_production_financial	Average Weekly Hours of Production and Nonsupervisory Employees, Financial Activities (hours)
+CES6500000007	hours_production_education_health	Average Weekly Hours of Production and Nonsupervisory Employees, Education and Health Services (hours)
+CES6500000039	women_to_all_education_health	Women Employees-To-All Employees Ratio: Education and Health Services
+CES9091000001	employees_federal	All Employees, Federal (thousands of persons)
+CES9091100001	employees_federal_no_postal	All Employees, Federal, Except U.S. Postal Service (thousands of persons)
+CES9091912001	employees_postal	All Employees, U.S. Postal Service (thousands of persons)
+CEU1011330001	employees_logging	All Employees, Logging (thousands of persons)
+CEU2000000007	hours_production_construction	Average Weekly Hours of Production and Nonsupervisory Employees, Construction (hours)
+LNS14000006	black_unemployment	Unemployment Rate - Black or African American (percent)
+UNRATE	unemployment_rate	Unemployment Rate.
+FPCPITOTLZGUSA	inflation	Inflation, consumer prices for the United States (percent)
+FEDFUNDS	federal_funds_rate	Federal Funds Effective Rate (percent)
+NA	percent_dif_unemploy	Percent difference between the Black/African American Unemployment Rate and the total U.S. Unemployment Rate (percent)

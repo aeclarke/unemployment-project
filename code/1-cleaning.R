@@ -2,30 +2,31 @@
 library(lubridate)
 library(tidyverse)
 
-# load raw case data
-case_data_raw = read_tsv(file = "data/raw/case_data_raw.tsv")
+# note: majority of cleaning done when downloaded data from fredr
 
-# clean case data
-case_data = case_data_raw %>%
-  na.omit() %>%                               # remove NA values
-  filter(year(date) == 2020) %>%              # keep data from 2020 
-  group_by(fips, county, state) %>%           # group by county
-  summarise(total_cases = sum(cases),         # total cases per county
-            total_deaths = sum(deaths)) %>%   # total deaths per county
-  ungroup() %>%
-  mutate(case_fatality_rate =                 # case_fatality_rate = 
-           total_deaths/total_cases*100) %>%  #  total_deaths/total_cases
-  select(-total_cases, -total_deaths)         # remove intermediate variables
+# set wd 
+setwd("~/Desktop/STAT471/unemployment-project")
 
-# load raw county health data
-# (omitted from this template)
+# load raw econ data
+econ_data_raw = read_tsv(file = "data/raw/econ_data_raw.tsv")
 
-# clean county health data
-# (omitted from this template, reading from file instead)
-county_health_data = read_tsv("data/raw/county_health_data.tsv")
+# Inflation is reported yearly, so set each month's inflation equal to yearly inflation
+yearly_inflation = econ_data_raw %>% summarise(year = year(date), inflation) %>% 
+  group_by(year) %>% summarise(yearly_inflation = mean(inflation, na.rm = T)) %>% select(yearly_inflation) %>% pull()
+# Consensus estimate for 2021 inflation
+yearly_inflation[50] = 6.8
+# Create sequence of inflation numbers
+yearly_inflation = rep(yearly_inflation, each=12)
+# Decemebr 2021 data has not be released, so leave out last month
+yearly_inflation = yearly_inflation[1:nrow(econ_data_raw)]
+# Add this sequence to econ data raw
+econ_data_raw = econ_data_raw %>% mutate(inflation = yearly_inflation)
 
-# join county health data with case data
-covid_data = inner_join(county_health_data, case_data, by = "fips")
+# Since there are 2,003 variables and many variables related, remove all variables with NA 
+econ_data_clean = econ_data_raw %>% 
+  select_if(function(x) all(!is.na(x))) %>% #remove columns with any NA
+  #create column for percent difference between total and African American unemployment
+  mutate(percent_dif_unemploy = (black_unemployment/unemployment_rate -1)*100 )
 
-# write cleaned data to file
-write_tsv(covid_data, file = "data/clean/covid_data.tsv")
+# Write cleaned data to file
+write_tsv(econ_data_clean, file = "data/clean/econ_data_clean.tsv")

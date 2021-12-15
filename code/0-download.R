@@ -11,6 +11,30 @@ library(ggplot2)
 # set FRED API key
 fredr_set_key("1c21ee5ac3042aee4c56fa8d2d3a5124")
 
+#get black unemployment numbers 
+black_unemployment = fredr_series_observations(series_id = "LNS14000006") %>%
+  select(date, value) %>%
+  rename(black_unemployment = value) 
+
+#get total unemployment rate data
+#only keep observations that have the same date 
+unemployment_rate = fredr_series_observations(series_id = "UNRATE") %>%
+  filter(date %in% black_unemployment$date) %>%
+  select(date, value) %>%
+  rename(unemployment_rate = value) 
+
+#include inflation, based on knowledge of Phillips curve
+inflation = fredr_series_observations(series_id = "FPCPITOTLZGUSA") %>%
+  filter(date >= as.Date("1972-01-01")) %>%
+  select(date, value) %>%
+  rename(inflation = value) 
+
+#include federal funds rate
+fed_funds = fredr_series_observations(series_id = "FEDFUNDS") %>%
+  filter(date >= as.Date("1972-01-01")) %>%
+  select(date, value) %>%
+  rename(federal_funds_rate = value) 
+
 #select relevant FRED releases 
 releases = c(
   "Employment Situation",
@@ -150,8 +174,14 @@ for (i in 1:length(string_id_16)){
   df = merge(df, add, by = "date", all.x = TRUE)
 }
 
+#add black unemployment and total unemployment to data set
+df = merge(df, black_unemployment, by = "date", all.x = TRUE)
+df = merge(df, unemployment_rate, by = "date", all.x = TRUE)
+df = merge(df, inflation, by = "date", all.x = TRUE)
+df = merge(df, fed_funds, by = "date", all.x = TRUE)
+
 #change names to correct series id
-names(df) = c("date", string_id)
+names(df) = c("date", string_id, "black_unemployment", "unemployment_rate", "inflation", "federal_funds_rate")
 
 #write raw data file
-write_tsv(x = df, file = "data/raw/econ_data_raw.tsv")
+write_tsv(x = df, file = "~/Desktop/STAT471/unemployment-project/data/raw/econ_data_raw.tsv")
