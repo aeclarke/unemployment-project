@@ -4,30 +4,85 @@ library(cowplot)                        # for side by side plots
 library(lubridate)                      # for dealing with dates
 library(maps)                           # for creating maps
 library(tidyverse)
-library(ggcorrplot)                     # for correlation plots
 
 # read in the cleaned data
 setwd("~/Desktop/STAT471/unemployment-project")
-econ_data = read_tsv(file = "data/clean/econ_data_clean.tsv")
-econ_data_train = read_tsv(file = "data/clean/econ_train.tsv")
-econ_data_test = read_tsv(file = "data/clean/econ_test.tsv")
+econ_train = read_tsv(file = "data/clean/econ_train.tsv")
+econ_test = read_tsv(file = "data/clean/econ_test.tsv")
 
-## Difference Between Total U.S. Unemployment and Black Unemployment
+# count number of test and train observations and number of filters
+test_obs = nrow(econ_train)
+train_obs = nrow(econ_test)
+total_obs = test_obs + train_obs
+num_features = ncol(econ_train)
 
-#Create plots to compare:
+ 
+# Variation in response variable 
+histogram_unemploy = econ_train %>%
+  ggplot(aes(x = UNRATE)) +
+  geom_histogram(bins = 15, fill = "grey", col =  "black") +
+  labs(x = "Unemployment Rate (%)", 
+       y = "Count") +
+  # add vertical line at the median value for unemployment rate
+  geom_vline(xintercept = median(econ_train$UNRATE), color = "#f04546") + 
+  theme_bw()
+# save the plot
+ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/histogram_unemploy.png", 
+       plot = histogram_unemploy, 
+       device = "png", 
+       width = 8, 
+       height = 5)
+
+# which 10 years have the highest unemployment rates
+top_10_unemploy = econ_train %>%
+  mutate(year = year(date)) %>% #add year columns
+  group_by(year) %>%  #group by year 
+  summarise(UNRATE = mean(UNRATE)) %>% 
+  ungroup() %>%
+  arrange(desc(UNRATE)) %>%
+  head(10)
+top_10_unemploy %>% 
+  kable(format = "latex", row.names = NA, 
+        booktabs = TRUE, digits = 1) %>%
+  kable_styling(position = "center") %>%
+  save_kable(file =
+               "~/Desktop/STAT471/unemployment-project/results/top_10_unemploy.pdf", 
+             self_contained = T)
+
+# Calculate mean unemployment 
+
+# All data 
+mean_all_years = econ_train %>%
+  summarise("Time" = "1960-2020", "Unemployment Rate" = mean(UNRATE))
+# After 2010
+mean_last_10years = econ_train %>% 
+  filter(date > as.Date("2010-01-01")) %>%
+  summarise("Time" = "2010-2020", "Unemployment Rate" = mean(UNRATE))
+# combine two metrics
+mean_unemploy = rbind(mean_all_years, mean_last_10years) 
+
+mean_unemploy  %>% 
+  kable(format = "latex", row.names = NA, 
+        booktabs = TRUE, digits = 2) %>%
+  kable_styling(position = "center") %>%
+  save_kable(file =
+               "~/Desktop/STAT471/unemployment-project/results/mean-unemployment-chart.pdf", 
+             self_contained = T)
+
+#Plot unemployment by year 
 
 # set colors to use for graphs 
-cols <- c("Total U.S."="#f04546","African American"="#3591d1")
+cols <- c("Total U.S."= "#3591d1","Mean Unemployment (1972-2021)"= "#f04546")
 
 # plot both unemployment rates for all years
-all_year_plot = econ_data %>% 
+all_year_plot = econ_train %>% 
   ggplot() + 
-  geom_line(mapping = aes(x=date,y=unemployment_rate, colour = "Total U.S.")) +
-  geom_line(mapping = aes(x=date,y=black_unemployment, color = "African American")) +
-  ggtitle("Total U.S. vs. African American Unemployment Rate (1972-2021)") + 
+  geom_line(mapping = aes(x=date,y=UNRATE, colour = "Total U.S.")) +
+  geom_hline(yintercept = median(econ_train$UNRATE), 
+             colour = "#f04546", linetype='dashed') +
+  ggtitle("Total U.S. Unemployment (1960-2020)") + 
   theme_bw() +
-  theme(axis.title.x = element_text(size = 8)) +
-  scale_colour_manual(name="Unemployment Metric",values=cols)  +
+  scale_colour_manual(name="Metric",values=cols)  +
   labs(
     x = "Date",
     y = "Unemployment Rate"
@@ -37,199 +92,238 @@ ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/all-year-compa
        plot = all_year_plot, 
        device = "png", 
        width = 8, 
-       height = 3)
+       height = 5)
+ 
 
-# plot both unemployment rates after 2010
-after_2010_plot= econ_data %>% filter(date > as.Date("2010-01-01")) %>%
-  ggplot() + 
-  geom_line(mapping = aes(x=date,y=unemployment_rate, colour = "Total U.S.")) +
-  geom_line(mapping = aes(x=date,y=black_unemployment, color = "African American")) +
-  ggtitle("Total U.S. vs. African American Unemployment Rate (2010-2021)") + 
-  theme_bw() +
-  theme(axis.title.x = element_text(size = 8)) +
-  scale_colour_manual(name="Unemployment Metric",values=cols)  +
-  labs(
-    x = "Date",
-    y = "Unemployment Rate"
-  )
-# save the plot
-ggsave(filename = 
-         "~/Desktop/STAT471/unemployment-project/results/after-2010-comparison-plot.png", 
-       plot = after_2010_plot, 
-       device = "png", 
-       width = 8, 
-       height = 3)
-
-# plot both unemployment rates after 2010
-pct_dif_plot= econ_data %>% 
-  ggplot() + 
-  geom_line(mapping = aes(x=date,y=percent_dif_unemploy)) +
-  ggtitle("Percent Difference Unemployment Rate Total U.S. vs. African American (1972-2021)") + 
-  theme_bw() +
-  theme(axis.title.x = element_text(size = 8)) +
-  labs(
-    x = "Date",
-    y = "Percent Difference"
-  )
-# save the plot
-ggsave(filename = 
-         "~/Desktop/STAT471/unemployment-project/results/percent-difference-plot.png", 
-       plot = pct_dif_plot, 
-       device = "png", 
-       width = 8, 
-       height = 3)
-
-# Consider Phillips Curve - plot Unemployment vs. Inflation
-# Does the Phillips Curve hold true for either metric?
-
-# Plot unemployment vs. inflation for 1972-2021
-phillips_curve_US = econ_data %>% 
-  summarise(year = year(date), unemployment_rate, black_unemployment, inflation) %>% 
+# Plot phillips curve (inflation by unemployment) 
+phillips_curve_US = econ_train %>% 
+  summarise(year = year(date), UNRATE, FPCPITOTLZGUSA) %>% 
   group_by(year) %>% 
-  summarise(unemployment_rate = mean(unemployment_rate), black_unemployment = mean(black_unemployment), 
-            inflation = mean(inflation)) %>%
+  summarise(unemployment_rate = mean(UNRATE), 
+            inflation = mean(FPCPITOTLZGUSA)) %>% ungroup() %>%
   ggplot() + 
-  geom_line(mapping = aes(x=unemployment_rate,y=inflation, colour = "Total U.S.")) +
-  ggtitle("Percent Difference Unemployment Rate Total U.S. vs. 
-          African American (1972-2021)") + 
+  geom_line(mapping = aes(x=unemployment_rate,y=inflation), color = "#3591d1") +
+  ggtitle("Inflation vs. Unemployment Rate") + 
   theme_bw() +
-  scale_colour_manual(name="Unemployment Metric",values=cols)  +
-  theme(axis.title.x = element_text(size = 8)) +
   labs(
     x = "Unemployment Rate",
     y = "Inflation"
   )
-# Save the plot
+# save the plot
 ggsave(filename = 
          "~/Desktop/STAT471/unemployment-project/results/phillips-curve-us-plot.png", 
        plot = phillips_curve_US, 
        device = "png", 
        width = 8, 
-       height = 3)
-
-# Plot unemployment vs. inflation from 2010-2021
-phillips_curve_black = econ_data %>% 
-  summarise(year = year(date), unemployment_rate, black_unemployment, inflation) %>% 
-  group_by(year) %>% 
-  summarise(unemployment_rate = mean(unemployment_rate), 
-            black_unemployment = mean(black_unemployment), 
-            inflation = mean(inflation)) %>%
+       height = 5)
+ 
+# Plot unemployment rate vs. federal funds rate
+fed_funds_plot = econ_train %>% filter(date > as.Date("2000-01-01")) %>% 
   ggplot() + 
-  geom_line(mapping = aes(x=black_unemployment,y=inflation, colour = "African American")) +
-  ggtitle("Percent Difference Unemployment Rate Total U.S. vs.
-          African American (1972-2021)") + 
+  geom_line(mapping = aes(x= FEDFUNDS,y=UNRATE), color = "#3591d1") +
+  ggtitle("Unemployment Rate vs. Federal Funds Rate (2000-2020)") + 
   theme_bw() +
-  scale_colour_manual(name="Unemployment Metric",values=cols)  +
-  theme(axis.title.x = element_text(size = 8)) +
-  labs(
-    x = "Unemployment Rate",
-    y = "Inflation"
-  )
-# Save the plot
-ggsave(filename = 
-         "~/Desktop/STAT471/unemployment-project/results/phillips-curve-black-plot.png", 
-       plot = phillips_curve_black, 
-       device = "png", 
-       width = 8, 
-       height = 3)
-
-# Set colors to use for graphs 
-cols <- c("Total U.S."="#f04546","African American"="#3591d1")
-
-# Plot both unemployment rates after 2010
-fed_funds_plot = econ_data %>% 
-  ggplot() + 
-  geom_line(mapping = aes(x=federal_funds_rate,y=unemployment_rate, 
-                          colour = "Total U.S.")) +
-  geom_line(mapping = aes(x=federal_funds_rate,y=black_unemployment, 
-                          colour = "African American")) +
-  ggtitle("Percent Difference Unemployment Rate Total U.S. vs. 
-          African American (1972-2021)") + 
-  theme_bw() +
-  scale_colour_manual(name="Unemployment Metric",values=cols)  +
-  theme(axis.title.x = element_text(size = 8)) +
   labs(
     x = "Federal Funds Rate",
     y = "Unemployment Rate"
   )
-# Save the plot
+# save the plot
 ggsave(filename = 
          "~/Desktop/STAT471/unemployment-project/results/fed-funds-plot.png", 
        plot = fed_funds_plot, 
        device = "png", 
        width = 8, 
-       height = 3)
+       height = 5)
 
-## Calculate Summary Stats for Train Data
+# Examine unemployment by thousands of employees 
 
-# Calculate mean unemployment 
-# All data 
-mean_all_years = econ_data_train %>%
-  summarise("Time" = "1972-2021", "Total U.S." = mean(unemployment_rate), 
-            "African American" = mean(black_unemployment))
+# logging plot
+employees_logging_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= CES1011330001, y = UNRATE), color = "#3591d1") +
+  ggtitle(" Logging") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Logging Employees (thousands)",
+    y = "Unemployment Rate"
+  )
 
-# After 2010
-mean_last_10years = econ_data_train %>% 
-  filter(date > as.Date("2010-01-01")) %>%
-  summarise("Time" = "2010-2021", "Total U.S." = mean(unemployment_rate), 
-            "African American" = mean(black_unemployment))
+# shipping and boating 
+employees_shipping_boating_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= CES3133660001, y = UNRATE), color = "#3591d1") +
+  ggtitle("Shipping and Boating") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Shipping and Boating Employees (thousands)",
+    y = "Unemployment Rate"
+  )
 
-mean_unemploy = rbind(mean_all_years, mean_last_10years) 
+# information plot
+employees_information_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= CEU5000000001, y = UNRATE), color = "#3591d1") +
+  ggtitle("Information") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Information Employees (thousands)",
+    y = "Unemployment Rate"
+  )
 
-# Format and save a chart that saves mean unemployment
-mean_unemploy  %>% 
-  kable(format = "latex", row.names = NA, 
-        booktabs = TRUE, digits = 2, 
-        caption = "Mean Unemployment for Both Metrics") %>%
-  kable_styling(position = "center") %>%
-  save_kable(file =
-               "~/Desktop/STAT471/unemployment-project/results/mean-unemployment-chart.pdf", 
-             self_contained = T)
+# information plot after 2000, since likely meaningless before then
+employees_information_plot_after_2000 = econ_train %>% 
+  filter(date > as.Date("2000-01-01")) %>%
+  ggplot() + 
+  geom_line(mapping = aes(x= CEU5000000001, y = UNRATE), color = "#3591d1") +
+  ggtitle("Information (2000-2020)") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Information Employees (thousands)",
+    y = "Unemployment Rate"
+  )
 
-# Calculate mean difference between total unemployment and African American unemployment
-mean_dif = econ_data_train %>%
-  summarise(mean_difference = mean(percent_dif_unemploy))
+# federal plot, suggests numbner might increase during high unemployment 
+employees_federal_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= CES9091000001, y = UNRATE), color = "#3591d1") +
+  ggtitle("Federal") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Federal Employees (thousands)",
+    y = "Unemployment Rate"
+  )
 
-top_5_dif = econ_data_train %>%
-  select(date, percent_dif_unemploy) %>%
-  arrange(desc(percent_dif_unemploy)) %>%
-  head(5)
+employees_plot = plot_grid(employees_logging_plot, employees_shipping_boating_plot, employees_information_plot, employees_information_plot_after_2000, employees_federal_plot, rnow = 3)
 
-top_5_dif_after_2010 = econ_data_train %>% filter(date > as.Date("2010-01-01")) %>%
-  select(date, percent_dif_unemploy) %>%
-  arrange(desc(percent_dif_unemploy)) %>%
-  head(5)
+# save the plot
+ggsave(filename = 
+         "~/Desktop/STAT471/unemployment-project/results/employees_plot.png", 
+       plot = employees_plot, 
+       device = "png", 
+       width = 8, 
+       height = 5)
 
-# Which year has highest difference between black and total unemployment?
-top_5_dif = econ_data_train %>%
-  select(date, percent_dif_unemploy) %>%
-  arrange(desc(percent_dif_unemploy)) %>%
-  head(5)
+# examine unemployment by hours of work, issue is still classifed as employed even if hours change
 
-top_5_dif_after_2010 = econ_data_train %>% filter(date > as.Date("2010-01-01")) %>%
-  select(date, percent_dif_unemploy) %>%
-  arrange(desc(percent_dif_unemploy)) %>%
-  head(5)
+# hours manufacturing plot
+hours_production_manufacturing_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= AWHMAN, y = UNRATE), color = "#3591d1") +
+  ggtitle("Manufacturing") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Hours Production",
+    y = "Unemployment Rate"
+  )
 
+# hours mining and logging plot
+hours_production_mining_logging_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= CES1000000007, y = UNRATE), color = "#3591d1") +
+  ggtitle("Mining/Logging") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Hours Production",
+    y = "Unemployment Rate"
+  )
 
+# hours construction plot
+hours_production_construction_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= CEU2000000007, y = UNRATE), color = "#3591d1") +
+  ggtitle("Construction") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Hours Production",
+    y = "Unemployment Rate"
+  )
 
+hours_production_plot = plot_grid(hours_production_manufacturing_plot, hours_production_mining_logging_plot, hours_production_construction_plot, nrow = 1)
 
+# save the plot
+ggsave(filename = 
+         "~/Desktop/STAT471/unemployment-project/results/hours_production_plot.png", 
+       plot = hours_production_plot, 
+       device = "png", 
+       width = 12, 
+       height = 4)
 
+# government social benefits: to persons: Federal: Benefits from social insurance funds: Unemployment insurance, as increases so should 
+social_benefits_plot = econ_train %>% 
+  filter(A1589C1A027NBEA <mean(econ_train$A1589C1A027NBEA)*5) %>% #remove a crazy outliar 
+  ggplot() + 
+  geom_line(mapping = aes(x= A1589C1A027NBEA, y = UNRATE), color = "#3591d1") +
+  ggtitle("Social Benefits to Persons") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Government social benefits: to person",
+    y = "Unemployment Rate"
+  )
 
-## Needs to work EDA wish did 
+# net government saving: Imputations
+net_gov_savings_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= A2010C1A027NBEA, y = UNRATE), color = "#3591d1") +
+  ggtitle("Net government saving") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Net government saving",
+    y = "Unemployment Rate"
+  )
 
-#Display the unemployment distribution in train with a plot. What is the median age? 
+# real Consumption of Fixed Capital: Private
+consumption_fixed_capital_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= A024RL1A225NBEA, y = UNRATE), color = "#3591d1") +
+  ggtitle("Real Consumption of Fixed Capital: Private") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Real Consumption of Fixed Capital: Private",
+    y = "Unemployment Rate"
+  )
 
-econ_data_train %>%
-  ggplot(aes(x = unemployment_rate)) + 
-  # create histogram for age distribution
-  geom_histogram(binwidth = 1) +
-  labs(x = "Unemployment Rate", y = "Count") + 
-  # add vertical line to indicate median age
-  geom_vline(xintercept = median(hd_train$AGE), color = "red", 
-             linetype = "dashed") +
-  theme_bw() + theme(legend.position = "none")
+# real Disposable Personal Income
+disposable_personal_income_plot = econ_train %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x= A067RL1A156NBEA, y = UNRATE), color = "#3591d1") +
+  ggtitle("Real Disposable Personal Income") + 
+  theme_bw() +
+  theme(axis.title.x = element_text(size = 8)) +
+  theme(axis.title.y = element_text(size = 8)) +
+  labs(
+    x = "Real Disposable Personal Income",
+    y = "Unemployment Rate"
+  )
 
-# Use a plot to explore the relationship between x and x in `econ_data_train`. What does this plot suggest?
-  
-```
+#combine plots
+gdp_plots = plot_grid(social_benefits_plot, net_gov_savings_plot, consumption_fixed_capital_plot, disposable_personal_income_plot, nrow = 2)
+
+# save the plot
+ggsave(filename = 
+         "~/Desktop/STAT471/unemployment-project/results/gdp_plots.png", 
+       plot = gdp_plots, 
+       device = "png", 
+       width = 10, 
+       height = 6)

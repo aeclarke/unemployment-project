@@ -1,32 +1,160 @@
-ID	variable_name	description
-AHECONS	hourly_earnings	Average Hourly Earnings of Production and Nonsupervisory Employees, Construction (hours)
-AWHMAN	hours_production_manufacturing	Average Weekly Hours of Production and Nonsupervisory Employees, Manufacturing (hours)
-AWHNONAG	hours_production_private	Average Weekly Hours of Production and Nonsupervisory Employees, Total Private (hours)
-AWOTMAN	overtime_hours_production	Average Weekly Overtime Hours of Production and Nonsupervisory Employees, Manufacturing (hours)
-CES0600000006	goods_producing_employees	 Production and Nonsupervisory Employees, Goods-Producing
-CES0600000039	women_to_all_goods	Women Employees-To-All Employees Ratio: Goods-Producing
-CES1000000006	employees_mining_logging	Production and Nonsupervisory Employees, Mining and Logging (thousands of persons)
-CES1000000007	hours_production_mining_logging	Average Weekly Hours of Production and Nonsupervisory Employees, Mining and Logging (hours)
-CES1000000010	women_employees_mining_logging	Women Employees, Mining and Logging (thousands of persons)
-CES1000000039	women_to_all_mining_logging	Women Employees-To-All Employees Ratio: Mining and Logging
-CES2000000006	employee_construction	Production and Nonsupervisory Employees, Construction (thousands of persons)
-CES2000000007	hours_production_construction	Average Weekly Hours of Production and Nonsupervisory Employees, Construction (hours)
-CES3100000039	women_to_all_durable_goods	Women Employees-To-All Employees Ratio: Durable Goods.
-CES4142000007	hours_production_wholesale_trade	Average Weekly Hours of Production and Nonsupervisory Employees, Wholesale Trade (hours)
-CES4300000007	hours_production_transport_warehousing	Average Weekly Hours of Production and Nonsupervisory Employees, Transportation and Warehousing (hours)
-CES4422000007	hours_production_ultilites	Average Weekly Hours of Production and Nonsupervisory Employees, Utilities (hours)
-CES5000000007	hours_production_information	Average Weekly Hours of Production and Nonsupervisory Employees, Information (hours)
-CES5000000010	women_employees	Women Employees, Information (thosands of persons)
-CES5500000007	hours_production_financial	Average Weekly Hours of Production and Nonsupervisory Employees, Financial Activities (hours)
-CES6500000007	hours_production_education_health	Average Weekly Hours of Production and Nonsupervisory Employees, Education and Health Services (hours)
-CES6500000039	women_to_all_education_health	Women Employees-To-All Employees Ratio: Education and Health Services
-CES9091000001	employees_federal	All Employees, Federal (thousands of persons)
-CES9091100001	employees_federal_no_postal	All Employees, Federal, Except U.S. Postal Service (thousands of persons)
-CES9091912001	employees_postal	All Employees, U.S. Postal Service (thousands of persons)
-CEU1011330001	employees_logging	All Employees, Logging (thousands of persons)
-CEU2000000007	hours_production_construction	Average Weekly Hours of Production and Nonsupervisory Employees, Construction (hours)
-LNS14000006	black_unemployment	Unemployment Rate - Black or African American (percent)
-UNRATE	unemployment_rate	Unemployment Rate.
-FPCPITOTLZGUSA	inflation	Inflation, consumer prices for the United States (percent)
-FEDFUNDS	federal_funds_rate	Federal Funds Effective Rate (percent)
-NA	percent_dif_unemploy	Percent difference between the Black/African American Unemployment Rate and the total U.S. Unemployment Rate (percent)
+id	title	frequency	units
+AHECONS	Average Hourly Earnings of Production and Nonsupervisory Employees, Construction	Monthly	Dollars per Hour
+AWHMAN	Average Weekly Hours of Production and Nonsupervisory Employees, Manufacturing	Monthly	Hours
+AWOTMAN	Average Weekly Overtime Hours of Production and Nonsupervisory Employees, Manufacturing	Monthly	Hours
+CES0600000006	Production and Nonsupervisory Employees, Goods-Producing	Monthly	Thousands of Persons
+CES1000000006	Production and Nonsupervisory Employees, Mining and Logging	Monthly	Thousands of Persons
+CES1000000007	Average Weekly Hours of Production and Nonsupervisory Employees, Mining and Logging	Monthly	Hours
+CES1000000010	Women Employees, Mining and Logging	Monthly	Thousands of Persons
+CES1000000039	Women Employees-To-All Employees Ratio: Mining and Logging	Monthly	Percent
+CES1011330001	All Employees, Logging	Monthly	Thousands of Persons
+CES2000000006	Production and Nonsupervisory Employees, Construction	Monthly	Thousands of Persons
+CES2000000007	Average Weekly Hours of Production and Nonsupervisory Employees, Construction	Monthly	Hours
+CES3000000006	Production and Nonsupervisory Employees, Manufacturing	Monthly	Thousands of Persons
+CES3000000010	Women Employees, Manufacturing	Monthly	Thousands of Persons
+CES3000000039	Women Employees-To-All Employees Ratio: Manufacturing	Monthly	Percent
+CES3133660001	All Employees, Ship and Boat Building	Monthly	Thousands of Persons
+CES9091000001	All Employees, Federal	Monthly	Thousands of Persons
+CES9091100001	All Employees, Federal, Except U.S. Postal Service	Monthly	Thousands of Persons
+CES9091912001	All Employees, U.S. Postal Service	Monthly	Thousands of Persons
+CEU0600000007	Average Weekly Hours of Production and Nonsupervisory Employees, Goods-Producing	Monthly	Hours
+CEU2000000007	Average Weekly Hours of Production and Nonsupervisory Employees, Construction	Monthly	Hours
+CEU3200000007	Average Weekly Hours of Production and Nonsupervisory Employees, Nondurable Goods	Monthly	Hours
+CEU5000000001	All Employees, Information	Monthly	Thousands of Persons
+A001RI1A225NBEA	Gross National Product: Implicit Price Deflator	Annual	Percent Change from Preceding Period
+A001RL1A225NBEA	Real Gross National Product	Annual	Percent Change from Preceding Period
+A001RL1Q225SBEA	Real Gross National Product	Quarterly	Percent Change from Preceding Period
+A001RO1Q156NBEA	Real Gross National Product	Quarterly	Percent Change from Quarter One Year Ago
+A001RP1A027NBEA	Gross National Product	Annual	Percent Change from Preceding Period
+A001RP1Q027SBEA	Gross National Product	Quarterly	Percent Change from Preceding Period
+A006RE1A156NBEA	Shares of gross domestic product: Gross private domestic investment	Annual	Percent
+A006RJ2Q224SBEA	Contributions to percent change in gross domestic product price index: Gross private domestic investment	Quarterly	Percentage Points at Annual Rate
+A006RL1A225NBEA	Real Gross Private Domestic Investment	Annual	Percent Change from Preceding Period
+A006RL1Q225SBEA	Real Gross Private Domestic Investment	Quarterly	Percent Change from Preceding Period
+A007RL1Q225SBEA	Real Gross Private Domestic Investment: Fixed Investment	Quarterly	Percent Change from Preceding Period
+A007RO1Q156NBEA	Real Gross Private Domestic Investment: Fixed Investment	Quarterly	Percent Change from Quarter One Year Ago
+A008RE1A156NBEA	Shares of gross domestic product: Gross private domestic investment: Fixed investment: Nonresidential	Annual	Percent
+A008RL1A225NBEA	Real Gross Private Domestic Investment: Fixed Investment: Nonresidential	Annual	Percent Change from Preceding Period
+A008RL1Q225SBEA	Real Gross Private Domestic Investment: Fixed Investment: Nonresidential	Quarterly	Percent Change from Preceding Period
+A009RL1A225NBEA	Real Gross Private Domestic Investment: Fixed Investment: Nonresidential: Structures	Annual	Percent Change from Preceding Period
+A009RL1Q225SBEA	Real Gross Private Domestic Investment: Fixed Investment: Nonresidential: Structures	Quarterly	Percent Change from Preceding Period
+A009RO1Q156NBEA	Real Gross Private Domestic Investment: Fixed Investment: Nonresidential: Structures	Quarterly	Percent Change from Quarter One Year Ago
+A009RS2A224NBEA	Contributions to percent change in gross domestic purchases: Gross private domestic investment: Fixed investment: Nonresidential: Structures	Annual	Percentage Points at Annual Rate
+A009RS2Q224SBEA	Contributions to percent change in gross domestic purchases: Gross private domestic investment: Fixed investment: Nonresidential: Structures	Quarterly	Percentage Points at Annual Rate
+A011RE1A156NBEA	Shares of gross domestic product: Gross private domestic investment: Fixed investment: Residential	Annual	Percent
+A011RJ2A224NBEA	Contributions to percent change in gross domestic product price index: Gross private domestic investment: Fixed investment: Residential	Annual	Percentage Points at Annual Rate
+A011RJ2Q224SBEA	Contributions to percent change in gross domestic product price index: Gross private domestic investment: Fixed investment: Residential	Quarterly	Percentage Points at Annual Rate
+A011RL1A225NBEA	Real Gross Private Domestic Investment: Fixed Investment: Residential	Annual	Percent Change from Preceding Period
+A011RL1Q225SBEA	Real Gross Private Domestic Investment: Fixed Investment: Residential	Quarterly	Percent Change from Preceding Period
+A014RE1A156NBEA	Shares of gross domestic product: Gross private domestic investment: Change in private inventories	Annual	Percent
+A014RE1Q156NBEA	Shares of gross domestic product: Gross private domestic investment: Change in private inventories	Quarterly	Percent
+A014RJ2A224NBEA	Contributions to percent change in gross domestic product price index: Gross private domestic investment: Change in private inventories	Annual	Percentage Points at Annual Rate
+A014RJ2Q224SBEA	Contributions to percent change in gross domestic product price index: Gross private domestic investment: Change in private inventories	Quarterly	Percentage Points at Annual Rate
+A014RY2A224NBEA	Contributions to percent change in real gross domestic product: Gross private domestic investment: Change in private inventories	Annual	Percentage Points at Annual Rate
+A014RY2Q224SBEA	Contributions to percent change in real gross domestic product: Gross private domestic investment: Change in private inventories	Quarterly	Percentage Points at Annual Rate
+A015RC1A027NBEA	Change in private inventories: Nonfarm	Annual	Billions of Dollars
+A015RC1Q027SBEA	Change in private inventories: Nonfarm	Quarterly	Billions of Dollars
+A015RS2A224NBEA	Contributions to percent change in gross domestic purchases: Gross private domestic investment: Change in private inventories: Nonfarm	Annual	Percentage Points at Annual Rate
+A015RS2Q224SBEA	Contributions to percent change in gross domestic purchases: Gross private domestic investment: Change in private inventories: Nonfarm	Quarterly	Percentage Points at Annual Rate
+A019RC1A027NBEA	Net exports of goods and services	Annual	Billions of Dollars
+A019RE1A156NBEA	Shares of gross domestic product: Net exports of goods and services	Annual	Percent
+A019RJ2A224NBEA	Contributions to percent change in gross domestic product price index: Net exports of goods and services	Annual	Percentage Points at Annual Rate
+A019RJ2Q224SBEA	Contributions to percent change in gross domestic product price index: Net exports of goods and services	Quarterly	Percentage Points at Annual Rate
+A019RY2A224NBEA	Contributions to percent change in real gross domestic product: Net exports of goods and services	Annual	Percentage Points at Annual Rate
+A019RY2Q224SBEA	Contributions to percent change in real gross domestic product: Net exports of goods and services	Quarterly	Percentage Points at Annual Rate
+A020RJ2A224NBEA	Contributions to percent change in gross domestic product price index: Exports of goods and services	Annual	Percentage Points at Annual Rate
+A020RJ2Q224SBEA	Contributions to percent change in gross domestic product price index: Exports of goods and services	Quarterly	Percentage Points at Annual Rate
+A020RL1A158NBEA	Real Exports of Goods and Services	Annual	Percent Change from Preceding Period
+A020RL1Q158SBEA	Real Exports of Goods and Services	Quarterly	Percent Change from Preceding Period
+A020RO1Q156NBEA	Real Exports of Goods and Services	Quarterly	Percent Change from Quarter One Year Ago
+A021RL1A158NBEA	Real Imports of Goods and Services	Annual	Percent Change from Preceding Period
+A021RL1Q158SBEA	Real Imports of Goods and Services	Quarterly	Percent Change from Preceding Period
+A021RO1Q156NBEA	Real Imports of Goods and Services	Quarterly	Percent Change from Quarter One Year Ago
+A021RV1Q225SBEA	Imports of Goods and Services (chain-type price index)	Quarterly	Percent Change from Preceding Period
+A021RY2A224NBEA	Contributions to percent change in real gross domestic product: Imports of goods and services	Annual	Percentage Points at Annual Rate
+A021RY2Q224SBEA	Contributions to percent change in real gross domestic product: Imports of goods and services	Quarterly	Percentage Points at Annual Rate
+A023RL1Q225SBEA	Real Gross National Income	Quarterly	Percent Change from Preceding Period
+A024RL1A225NBEA	Real Consumption of Fixed Capital: Private	Annual	Percent Change from Preceding Period
+A024RL1Q225SBEA	Real Consumption of Fixed Capital: Private	Quarterly	Percent Change from Preceding Period
+A030RC1A027NBEA	Net lending or net borrowing (-), NIPAs: Government: Statistical discrepancy	Annual	Billions of Dollars
+A030RC1Q027SBEA	Net lending or net borrowing (-), NIPAs: Government: Statistical discrepancy	Quarterly	Billions of Dollars
+A041RE1A156NBEA	Shares of gross domestic income: Net operating surplus: Private enterprises: Proprietors' income with inventory valuation and capital consumption adjustments	Annual	Percent
+A043RC1A027NBEA	National income: Proprietors' income with IVA: Farm	Annual	Billions of Dollars
+A048RC1A027NBEA	Rental income of persons with capital consumption adjustment	Annual	Billions of Dollars
+A048RE1A156NBEA	Shares of gross domestic income: Net operating surplus: Private enterprises: Rental income of persons with capital consumption adjustment	Annual	Percent
+A054RE1A156NBEA	Shares of gross domestic income: Corporate profits with inventory valuation and capital consumption adjustments, domestic industries: Taxes on corporate income	Annual	Percent
+A059RC1A027NBEA	Net private saving: Domestic business: Capital consumption adjustment, corporate	Annual	Billions of Dollars
+A067RL1A156NBEA	Real Disposable Personal Income	Annual	Percent Change from Preceding Period
+A067RL1Q156SBEA	Real Disposable Personal Income	Quarterly	Percent Change from Preceding Period
+A067RO1Q156NBEA	Real Disposable Personal Income	Quarterly	Percent Change from Quarter One Year Ago
+A067RP1A027NBEA	Disposable Personal Income	Annual	Percent Change from Preceding Period
+A067RP1Q027SBEA	Disposable Personal Income	Quarterly	Percent Change from Preceding Period
+A071RC1A027NBEA	Personal saving	Annual	Billions of Dollars
+A072RC1A156NBEA	Personal saving as a percentage of disposable personal income	Annual	Percent
+A107RE1A156NBEA	Shares of gross domestic income: Subsidies	Annual	Percent
+A108RC1A027NBEA	Current surplus of government enterprises	Annual	Billions of Dollars
+A108RE1A156NBEA	Shares of gross domestic income: Current surplus of government enterprises	Annual	Percent
+A1100C1A027NBEA	Monetary interest paid: Domestic: Corporate business: Financial	Annual	Billions of Dollars
+A127RC1Q027SBEA	Net private saving: Domestic business	Quarterly	Billions of Dollars
+A133RA3A086NBEA	Real automobile output (chain-type quantity index)	Annual	Index 2012=100
+A133RL1A225NBEA	Real Motor Vehicle Output: Auto Output	Annual	Percent Change from Preceding Period
+A133RL1Q225SBEA	Real Motor Vehicle Output: Auto Output	Quarterly	Percent Change from Preceding Period
+A136RL1A225NBEA	Real Motor Vehicle Output: Final Sales of Domestic Product: Personal Consumption Expenditures: New Motor Vehicles: Autos	Annual	Percent Change from Preceding Period
+A136RL1Q225SBEA	Real Motor Vehicle Output: Final Sales of Domestic Product: Personal Consumption Expenditures: New Motor Vehicles: Autos	Quarterly	Percent Change from Preceding Period
+A1400C1A027NBEA	Capital consumption adjustment: for consistent accounting at historical cost	Annual	Billions of Dollars
+A1402C1A027NBEA	Capital consumption adjustment: Domestic corporate business: for consistent accounting at historical cost	Annual	Billions of Dollars
+A145RC1A027NBEA	Automobile output: Change in private inventories of new and used autos	Annual	Billions of Dollars
+A145RC1Q027SBEA	Automobile output: Change in private inventories of new and used autos	Quarterly	Billions of Dollars
+A1589C1A027NBEA	Government social benefits: to persons: Federal: Benefits from social insurance funds: Unemployment insurance	Annual	Billions of Dollars
+A1608C1A027NBEA	Balance on goods and services and income: Adjustment for U.S. territories and Puerto Rico	Annual	Billions of Dollars
+A1610C1A027NBEA	Balance on current account: Adjustment for U.S. territories and Puerto Rico	Annual	Billions of Dollars
+A1830C0A144NBEA	Inventory valuation adjustment to nonfarm incomes	Annual	Millions of Dollars
+A1870C1A027NBEA	Business current transfer payments (net): Insurance payments to persons by business	Annual	Billions of Dollars
+A190RL1Q225SBEA	Real Final Sales of Domestic Product	Quarterly	Percent Change from Preceding Period
+A190RP1Q027SBEA	Final Sales of Domestic Product	Quarterly	Percent Change from Preceding Period
+A193RL1A225NBEA	Real Gross Value Added: Gross Domestic Product: Households and Institutions	Annual	Percent Change from Preceding Period
+A193RL1Q225SBEA	Real Gross Value Added: Gross Domestic Product: Households and Institutions	Quarterly	Percent Change from Preceding Period
+A194RL1A225NBEA	Real Gross Output of General Government: Value Added: Compensation of General Government Employees	Annual	Percent Change from Preceding Period
+A194RL1Q225SBEA	Real Gross Output of General Government: Value Added: Compensation of General Government Employees	Quarterly	Percent Change from Preceding Period
+A2009L1A225NBEA	Real Gross Housing Value Added	Annual	Percent Change from Preceding Period
+A2009L1Q225SBEA	Real Gross Housing Value Added	Quarterly	Percent Change from Preceding Period
+A2010C1A027NBEA	Net government saving: Imputations	Annual	Billions of Dollars
+A2011C1A027NBEA	Net government saving: Excluding imputations	Annual	Billions of Dollars
+A2033C1A027NBEA	Balance on goods and services and income: Statistical differences , International Transactions Accounts vs. NIPAs	Annual	Billions of Dollars
+A2036C1A027NBEA	Balance on current account: Statistical differences, International Transactions Accounts vs. NIPAs	Annual	Billions of Dollars
+A2051C1A027NBEA	Gross domestic product: Farm products consumed on farms	Annual	Billions of Dollars
+A2071C1A027NBEA	Monetary interest received: Government	Annual	Billions of Dollars
+A2101C1A027NBEA	Gross domestic income: Proprietors' income with inventory valuation and capital consumption adjustments: Imputations	Annual	Billions of Dollars
+A2105C1A027NBEA	Gross domestic income: Net interest and miscellaneous payments: Excluding imputations	Annual	Billions of Dollars
+A2122C1A027NBEA	Personal saving: Excluding imputations	Annual	Billions of Dollars
+A2224C1A027NBEA	Net corporate dividend payments: Rest of the world	Annual	Billions of Dollars
+A253RD3A086NBEA	Exports of goods (implicit price deflator)	Annual	Index 2012=100
+A253RE1A156NBEA	Shares of gross domestic product: Exports of goods	Annual	Percent
+A253RY2Q224SBEA	Contributions to percent change in real gross domestic product: Exports of goods	Quarterly	Percentage Points at Annual Rate
+A2641C1A027NBEA	Employment-related imputations: Employees' lodging	Annual	Billions of Dollars
+A264RL1A225NBEA	Real Consumption of Fixed Capital: Government	Annual	Percent Change from Preceding Period
+A325RL1A225NBEA	Real Gross Domestic Product: Goods: Final Sales	Annual	Percent Change from Preceding Period
+A325RL1Q225SBEA	Real Gross Domestic Product: Goods: Final Sales	Quarterly	Percent Change from Preceding Period
+A334RL1A225NBEA	Real Gross Domestic Product: Goods: Nondurable Goods: Final Sales	Annual	Percent Change from Preceding Period
+A334RL1Q225SBEA	Real Gross Domestic Product: Goods: Nondurable Goods: Final Sales	Quarterly	Percent Change from Preceding Period
+A334RY2A224NBEA	Contributions to percent change in real gross domestic product: Nondurable goods: Final sales	Annual	Percentage Points at Annual Rate
+A3402C0A144NBEA	Undistributed corporate profits: Domestic industries	Annual	Millions of Dollars
+A341RL1A225NBEA	Real Gross Domestic Product: Services	Annual	Percent Change from Preceding Period
+A341RL1Q225SBEA	Real Gross Domestic Product: Services	Quarterly	Percent Change from Preceding Period
+A3474C0A144NBEA	Undistributed corporate profits: Rest of the world	Annual	Millions of Dollars
+A349RL1A225NBEA	Real Private Fixed Investment: Private Fixed Investment in Structures	Annual	Percent Change from Preceding Period
+A349RL1Q225SBEA	Real Private Fixed Investment: Private Fixed Investment in Structures	Quarterly	Percent Change from Preceding Period
+A354RL1A225NBEA	Real Gross Domestic Product: Goods: Durable Goods	Annual	Percent Change from Preceding Period
+A354RL1Q225SBEA	Real Gross Domestic Product: Goods: Durable Goods	Quarterly	Percent Change from Preceding Period
+A355RY2Q224SBEA	Contributions to percent change in real gross domestic product: Durable goods: Change in private inventories	Quarterly	Percentage Points at Annual Rate
+A356RL1A225NBEA	Real Gross Domestic Product: Goods: Nondurable Goods	Annual	Percent Change from Preceding Period
+A356RL1Q225SBEA	Real Gross Domestic Product: Goods: Nondurable Goods	Quarterly	Percent Change from Preceding Period
+A357RC1A027NBEA	Gross domestic product: Nondurable goods: Change in private inventories	Annual	Billions of Dollars
+A357RC1Q027SBEA	Gross domestic product: Nondurable goods: Change in private inventories	Quarterly	Billions of Dollars
+A357RY2A224NBEA	Contributions to percent change in real gross domestic product: Nondurable goods: Change in private inventories	Annual	Percentage Points at Annual Rate
+A357RY2Q224SBEA	Contributions to percent change in real gross domestic product: Nondurable goods: Change in private inventories	Quarterly	Percentage Points at Annual Rate
+A365RG3A086NBEA	Farm output: Net farm value added (chain-type price index)	Annual	Index 2009=100
+A4002E1A156NBEA	Shares of gross domestic income: Compensation of employees, paid	Annual	Percent
+FEDFUNDS	Federal Funds Effective Rate	Monthly	Percent
+FPCPITOTLZGUSA	Inflation, consumer prices for the United States	Yearly	Percent
+UNRATE	Unemployment Rate.	Monthly	Percent

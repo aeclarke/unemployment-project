@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.22)  14 DEC 2021 16:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.22)  17 DEC 2021 14:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -736,117 +736,108 @@ LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 
-Package xcolor Warning: Incompatible color definition on input line 202.
+Package xcolor Warning: Incompatible color definition on input line 179.
+
+
+Package xcolor Warning: Incompatible color definition on input line 186.
+
+
+Package xcolor Warning: Incompatible color definition on input line 186.
+
+
+Package xcolor Warning: Incompatible color definition on input line 196.
+
+
+Package xcolor Warning: Incompatible color definition on input line 214.
+
+
+Package xcolor Warning: Incompatible color definition on input line 214.
+
+
+Package xcolor Warning: Incompatible color definition on input line 214.
 
 [1
 
 {/Users/ashleyclarke/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.m
 ap}]
 
-Package xcolor Warning: Incompatible color definition on input line 227.
+Package xcolor Warning: Incompatible color definition on input line 214.
 
 
-Package xcolor Warning: Incompatible color definition on input line 227.
+Package xcolor Warning: Incompatible color definition on input line 214.
 
 
-Package xcolor Warning: Incompatible color definition on input line 229.
+Package xcolor Warning: Incompatible color definition on input line 216.
 
 
-Package xcolor Warning: Incompatible color definition on input line 255.
+Package xcolor Warning: Incompatible color definition on input line 233.
 
 
-Package xcolor Warning: Incompatible color definition on input line 255.
+Package xcolor Warning: Incompatible color definition on input line 233.
 
 
-Package xcolor Warning: Incompatible color definition on input line 257.
+Package xcolor Warning: Incompatible color definition on input line 239.
 
 
-Package xcolor Warning: Incompatible color definition on input line 281.
+Package xcolor Warning: Incompatible color definition on input line 260.
 
 
-Package xcolor Warning: Incompatible color definition on input line 281.
+Package xcolor Warning: Incompatible color definition on input line 260.
 
 
-Underfull \vbox (badness 10000) detected at line 281
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 281.
+Package xcolor Warning: Incompatible color definition on input line 264.
 
 [2]
 
-Package xcolor Warning: Incompatible color definition on input line 281.
-
-
-Package xcolor Warning: Incompatible color definition on input line 281.
+Package xcolor Warning: Incompatible color definition on input line 289.
 
 
 Package xcolor Warning: Incompatible color definition on input line 289.
 
 
-Package xcolor Warning: Incompatible color definition on input line 320.
-
-
-Package xcolor Warning: Incompatible color definition on input line 320.
+Package xcolor Warning: Incompatible color definition on input line 297.
 
 
 Package xcolor Warning: Incompatible color definition on input line 322.
 
 
-Package xcolor Warning: Incompatible color definition on input line 353.
+Package xcolor Warning: Incompatible color definition on input line 322.
 
 
-Package xcolor Warning: Incompatible color definition on input line 353.
-
-
-Package xcolor Warning: Incompatible color definition on input line 353.
+Package xcolor Warning: Incompatible color definition on input line 328.
 
 [3]
 
-Package xcolor Warning: Incompatible color definition on input line 353.
+Package xcolor Warning: Incompatible color definition on input line 348.
+
+
+Package xcolor Warning: Incompatible color definition on input line 348.
 
 
 Package xcolor Warning: Incompatible color definition on input line 353.
 
 
-Package xcolor Warning: Incompatible color definition on input line 355.
+Package xcolor Warning: Incompatible color definition on input line 439.
 
 
-Package xcolor Warning: Incompatible color definition on input line 384.
+Package xcolor Warning: Incompatible color definition on input line 439.
 
 
-Package xcolor Warning: Incompatible color definition on input line 384.
+Underfull \vbox (badness 10000) detected at line 439
+ []
 
 
-Package xcolor Warning: Incompatible color definition on input line 392.
+Package xcolor Warning: Incompatible color definition on input line 439.
 
 [4]
 
-Package xcolor Warning: Incompatible color definition on input line 416.
+Package xcolor Warning: Incompatible color definition on input line 439.
 
 
-Package xcolor Warning: Incompatible color definition on input line 416.
+Package xcolor Warning: Incompatible color definition on input line 439.
 
 
-Package xcolor Warning: Incompatible color definition on input line 423.
-
-
-Package xcolor Warning: Incompatible color definition on input line 438.
-
-
-Package xcolor Warning: Incompatible color definition on input line 438.
-
-
-Package xcolor Warning: Incompatible color definition on input line 444.
-
-
-Package xcolor Warning: Incompatible color definition on input line 456.
-
-
-Package xcolor Warning: Incompatible color definition on input line 456.
-
-
-Package xcolor Warning: Incompatible color definition on input line 456.
+Package xcolor Warning: Incompatible color definition on input line 446.
 
 [5]
 
@@ -855,18 +846,68 @@ Package xcolor Warning: Incompatible color definition on input line 456.
 
 Package xcolor Warning: Incompatible color definition on input line 456.
 
-[6] (./4-exploration.aux)
+
+Package xcolor Warning: Incompatible color definition on input line 458.
+
+
+Package xcolor Warning: Incompatible color definition on input line 513.
+
+
+Package xcolor Warning: Incompatible color definition on input line 513.
+
+
+Underfull \vbox (badness 10000) detected at line 513
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 513.
+
+[6]
+
+Package xcolor Warning: Incompatible color definition on input line 513.
+
+
+Package xcolor Warning: Incompatible color definition on input line 513.
+
+
+Package xcolor Warning: Incompatible color definition on input line 515.
+
+
+Package xcolor Warning: Incompatible color definition on input line 581.
+
+
+Package xcolor Warning: Incompatible color definition on input line 581.
+
+
+Underfull \vbox (badness 10000) detected at line 581
+ []
+
+
+Overfull \vbox (0.3172pt too high) detected at line 581
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 581.
+
+[7]
+
+Package xcolor Warning: Incompatible color definition on input line 581.
+
+
+Package xcolor Warning: Incompatible color definition on input line 581.
+
+[8] (./4-exploration.aux)
 Package rerunfilecheck Info: File `4-exploration.out' has not changed.
-(rerunfilecheck)             Checksum: BBC03C0B90EEA37F0AD0FBAC3E85483E;2175.
+(rerunfilecheck)             Checksum: 13DC37DA5AD9D97D3DF9EEE0FD152D58;1348.
  ) 
 Here is how much of TeX's memory you used:
- 14094 strings out of 480519
- 214752 string characters out of 5900827
- 572069 words of memory out of 5000000
- 31411 multiletter control sequences out of 15000+600000
- 437081 words of font info for 74 fonts, out of 8000000 for 9000
+ 14091 strings out of 480519
+ 214440 string characters out of 5900827
+ 577658 words of memory out of 5000000
+ 31410 multiletter control sequences out of 15000+600000
+ 436984 words of font info for 73 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,7n,66p,550b,373s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,7n,66p,527b,372s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/Users/ashleyclarke/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}
 {/Users/ashleyclarke/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}<
 /Users/ashleyclarke/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
@@ -877,10 +918,10 @@ pfb></Users/ashleyclarke/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk1
 0.pfb></Users/ashleyclarke/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmt
 t10.pfb></Users/ashleyclarke/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/l
 mtti10.pfb>
-Output written on 4-exploration.pdf (6 pages, 190580 bytes).
+Output written on 4-exploration.pdf (8 pages, 196503 bytes).
 PDF statistics:
- 108 PDF objects out of 1000 (max. 8388607)
- 84 compressed objects within 1 object stream
+ 113 PDF objects out of 1000 (max. 8388607)
+ 87 compressed objects within 1 object stream
  19 named destinations out of 1000 (max. 500000)
- 18481 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 18473 words of extra memory for PDF output out of 20736 (max. 10000000)
 

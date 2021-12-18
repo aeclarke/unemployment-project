@@ -16,3 +16,7 @@ econ_test = econ_data %>% filter(!(row_number() %in% train_samples))
 # save the train and test data
 write_tsv(x = econ_train, file = "data/clean/econ_train.tsv")
 write_tsv(x = econ_test, file = "data/clean/econ_test.tsv")
+
+nrow(econ_train)
+nrow(econ_test)
+
