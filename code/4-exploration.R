@@ -102,7 +102,6 @@ ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/all-year-compa
        device = "png", 
        width = 8, 
        height = 5)
- 
 
 # Plot phillips curve (inflation by unemployment) 
 phillips_curve_US = econ_train %>% 
@@ -140,6 +139,55 @@ fed_funds_plot = econ_train %>% filter(date > as.Date("2000-01-01")) %>%
 ggsave(filename = 
          "~/Desktop/STAT471/unemployment-project/results/fed-funds-plot.png", 
        plot = fed_funds_plot, 
+       device = "png", 
+       width = 8, 
+       height = 5)
+
+# Examine variation in features 
+
+set.seed(3)
+#randomly select features to look at variation of
+vars_for_variation = names(econ_train)[sample(1:length(econ_train), 4, replace=FALSE)]
+
+#plot histogram of selected features distribution 
+h1 = econ_train %>%
+  ggplot(aes(x = CES0600000006)) +
+  geom_histogram(bins = 15, fill = "grey", col =  "black") +
+  labs(x = "Number goods producing employees (thousands)", 
+       y = "Count") +
+  # add vertical line at the median value for unemployment rate
+  geom_vline(xintercept = median(econ_train$CES0600000006), color = "#f04546") + 
+  theme_bw()
+h2 = econ_train %>%
+  ggplot(aes(x = A133RL1Q225SBEA)) +
+  geom_histogram(bins = 15, fill = "grey", col =  "black") +
+  labs(x = "Change Real Motor Vechicle Output (%)", 
+       y = "Count") +
+  # add vertical line at the median value for unemployment rate
+  geom_vline(xintercept = median(econ_train$A133RL1Q225SBEA), color = "#f04546") + 
+  theme_bw()
+h3 = econ_train %>%
+  ggplot(aes(x = A014RE1A156NBEA)) +
+  geom_histogram(bins = 15, fill = "grey", col =  "black") +
+  labs(x = "Change in private inventories (%)", 
+       y = "Count") +
+  # add vertical line at the median value for unemployment rate
+  geom_vline(xintercept = median(econ_train$A014RE1A156NBEA), color = "#f04546") + 
+  theme_bw()
+h4 = econ_train %>%
+  ggplot(aes(x = A001RO1Q156NBEA)) +
+  geom_histogram(bins = 15, fill = "grey", col =  "black") +
+  labs(x = "Change Real Gross National Product (%) ", 
+       y = "Count") +
+  # add vertical line at the median value for unemployment rate
+  geom_vline(xintercept = median(econ_train$A001RO1Q156NBEA), color = "#f04546") + 
+  theme_bw()
+#combine all the histograms into one plot
+variation_features_plot = plot_grid(h1, h2, h3, h4, nrow = 2)
+# save the plot
+ggsave(filename = 
+         "~/Desktop/STAT471/unemployment-project/results/var-features-plot.png", 
+       plot = variation_features_plot , 
        device = "png", 
        width = 8, 
        height = 5)

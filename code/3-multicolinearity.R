@@ -100,7 +100,9 @@ ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/corr-plot.png"
 
 # too many variables, so take subsample of 30 variables to show
 set.seed(1)
+#generate 30 random numbers
 show = sample(1:nrow(corr), 30, replace=FALSE)
+#select rows and cols for subsample
 corr_sub = corr[show, show]
 corr_plot_subsample = ggcorrplot(corr_sub,
                        type = "lower",

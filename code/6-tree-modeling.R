@@ -119,8 +119,6 @@ var_imp_rf = data.frame(varImpPlot(rf_fit, n.var = 10)[, 1])
 var_imp_rf = cbind(rownames(var_imp_rf), var_imp_rf)
 write_tsv(var_imp_rf, file = "~/Desktop/STAT471/unemployment-project/results/var_imp_rf.tsv")
 
-
-
 # boosting
 
 #tuning interaction depth by trying out a few different values

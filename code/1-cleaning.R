@@ -3,8 +3,6 @@ library(lubridate)
 library(tidyverse)
 library(dplyr)
 
-# note: major issue is metric reported monthly, quarterly, and yearly 
-
 # set wd 
 setwd("~/Desktop/STAT471/unemployment-project")
 
