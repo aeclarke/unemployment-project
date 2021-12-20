@@ -64,7 +64,7 @@ People are classified as unemployed if they do not have a job, have actively loo
 
 Unemployment rates fluctuate over time. During periods of recession and depression, unemployment is high. During periods of economic growth, unemployment tends to be lower. For example, the unemployment rate was 25% during the Great Depression, 10.8% in November 1982, and 14.7% in April 2020.^["Unemployment is nearing Great Depression levels. Here’s how the eras are similar — and different". https://www.cnbc.com/2020/05/19/unemployment-today-vs-the-great-depression-how-do-the-eras-compare.html]. Unemployment rates in the late 1990s and into the mid-2000s were low by historical standards. The unemployment rate was below 5% from 1997 to 2000 and near 5% during almost all of 2006–2007^["Patterns of Unemployment",https://opentextbc.ca/principlesofeconomics/chapter/21-2-patterns-of-unemployment/ ].
 
-Unemployment generally falls during periods of economic prosperity and rises during recessions, creating significant pressure on public finances as tax revenue falls and social safety net costs increase. Government spending and taxation decisions (fiscal policy) and U.S. Federal Reserve interest rate adjustments (monetary policy) are crucial tools for managing the unemployment rate. There may be an economic trade-off between unemployment and inflation, as policies designed to reduce unemployment can create inflationary pressure, and vice versa. The U.S. Federal Reserve (the Fed) has a dual mandate to achieve full employment while maintaining a low rate of inflation as shown in (Figure  \@ref(fig:dual-mandate)). Historically, the Fed has targeted a 5% unemployment rate and 2% inflation. 
+Unemployment generally falls during periods of economic prosperity and rises during recessions, creating significant pressure on public finances as tax revenue falls and social safety net costs increase. Government spending and taxation decisions (fiscal policy) and U.S. Federal Reserve interest rate adjustments (monetary policy) are crucial tools for managing the unemployment rate. There may be an economic trade-off between unemployment and inflation, as policies designed to reduce unemployment can create inflationary pressure, and vice versa. The U.S. Federal Reserve (the Fed) has a dual mandate to achieve full employment while maintaining a low rate of inflation as shown in Figure  \@ref(fig:dual-mandate). Historically, the Fed has targeted a 5% unemployment rate and 2% inflation. 
 
 ```{r dual-mandate, fig.align='center', fig.cap = "The Federal Reserve has a dual mandate to maintain low inflation and to achieve full employment", out.width="70%", echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/dual-mandate.png")
@@ -76,7 +76,7 @@ This report focuses on two reports released by the Bureau of Labor Statistics. F
 
 ## Analysis goals {-}
 
-Given my knowledge that unemployment rates rise and fall in response to economic conditions, I sought to investigate which factors in the "Employment Situation Summary" and "Gross Domestic Product Summary" are predictive of unemployment. Additionally, I determined whether these factors were more or less predictive than inflation and the federal funds rate. The purpose of this analysis is not necessarily to predict future unemployment rates. Instead, my goal is to determine which features have been predictive of the U.S. unemployment rate in the past. To achieve this goal I will predict based on the 158 variables outlined in Table \@ref(tab:vars-appendix), these variables consist of employment-related variables and economic-related variables. I will consider my analysis a success if I can identify a set of variables that are found to be predictive of the U.S. unemployment rate using multiple modeling techniques. Additionally, I will determine which model best matches the underlying trend in the data by calculating test error. In addition to calculating test root-mean-square-error (RMSE) for each of my models, I will calculate the test RMSE error for an intercept-only model as a baseline.
+Given my knowledge that unemployment rates rise and fall in response to economic conditions, I sought to investigate which factors in the "Employment Situation Summary" and "Gross Domestic Product Summary" are predictive of unemployment. Additionally, I determined whether these factors were more or less predictive than inflation and the federal funds rate. The purpose of this analysis is not necessarily to predict future unemployment rates. Instead, my goal is to determine which features have been predictive of the U.S. unemployment rate in the past. To achieve this goal I will predict based on the 158 variables outlined in out the end of this report, these variables consist of employment-related variables and economic-related variables. I will consider my analysis a success if I can identify a set of variables that are found to be predictive of the U.S. unemployment rate using multiple modeling techniques. Additionally, I will determine which model best matches the underlying trend in the data by calculating test error. In addition to calculating test root-mean-square-error (RMSE) for each of my models, I will calculate the test RMSE error for an intercept-only model as a baseline.
 
 ## Significance {-}
 
@@ -100,7 +100,7 @@ This analysis goal is important to address in the context of application because
 
 **Process of downloading data**
 
-The data was collected using the fredr package^[https://cran.r-project.org/web/packages/fredr/vignettes/fredr.html], which provides a complete set of R bindings to the Federal Reserve of Economic Data (FRED) RESTful API, provided by the Federal Reserve Bank of St. Louis. The fredr package allowed me to search for and fetch time series observations as well as associated metadata within the FRED database. Since FRED organizes their data using variable ids, I downloaded time series observations from all variable ids in the Employment Situation and Gross Domestic Products reports, which represents over 2000 variables, from June 1954-November 2021. Additonally, I downloaded the U.S. unemployment rate (response variable), inflation rate, and federal funds rate. Before cleaning, the data set consisted of 804 observations and 2004 variables. 
+The data was collected using the fredr package^[https://cran.r-project.org/web/packages/fredr/vignettes/fredr.html], which provides a complete set of R bindings to the Federal Reserve of Economic Data (FRED) RESTful API, provided by the Federal Reserve Bank of St. Louis. The fredr package allowed me to search for and fetch time series observations as well as associated metadata within the FRED database. Since FRED organizes their data using variable ids, I downloaded time series observations from all variable ids in the Employment Situation and Gross Domestic Products reports, which represents over 2000 variables, from June 1954-November 2021. Additionally, I downloaded the U.S. unemployment rate (response variable), inflation rate, and federal funds rate. Before cleaning, the data set consisted of 804 observations and 2004 variables. 
 
 Due to the size of the data set, the data set takes around 5-10 minutes to download from FRED. Also, since the fredr package has a limit of 120 requests / minute, it might take longer than expected for the data to load.  
  
@@ -120,7 +120,7 @@ While the unemployment rate has been reported monthly since June 1954, many othe
 
 **2. Reporting frequency: Not all features are reported monthly**
 
-While both the Employment Situation and Gross Domestic Product reports are released monthly, not every feature is updated monthly. Many features are reported either quarterly or yearly. This issue was identified by examining the number of observations per feature. I noticed that many features had eith 61 or 244 complete observations as shown in (Figure  \@ref(fig:observations-per-feature)). 
+While both the Employment Situation and Gross Domestic Product reports are released monthly, not every feature is updated monthly. Many features are reported either quarterly or yearly. This issue was identified by examining the number of observations per feature. I noticed that many features had eith 61 or 244 complete observations as shown in Figure  \@ref(fig:observations-per-feature). 
 
 This makes sense because the time frame of the dataset corresponds to 61 years and 244 quarters (3 months each). To impute the missing values for yearly data, I set every month in the yearly equal to the yearly metric. For missing quarterly data, I set the next two months equal to the quarterly metric. While I recognize that this is not a perfect way to impute these features, I believe it is better than dropping entire columns or rows. After imputing missing values for quarterly and yearly data, I dropped all columns with NA values, which left me with 831 features. 
 
@@ -130,7 +130,7 @@ knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/histogra
 
 **3. Duplicate features: Some features represent the same metric with minor adjustments**
 
-In their monthly reports, FRED makes minor adjustments to metrics and reports them as separate features. For instance, both seasonally adjusted and non seasonally adjusted numbers are reported for most metrics. To eliminate the double-counting variables, if a variable and another variable have a higher than 0.9 correlation with each other, I only kept one of the variables. Correlation is more informative than covariance when deciding which variables to remove because it does not depend on the scales of the features and always lies in the interval [-1,1]. The closer the correlation is to the endpoints of this interval, the more strongly the features are related. If the correlation is very high, it is likely the variables measure the same thing. Additionally, due to potential multicolinearity issues, I decided that it was better to remove features that are highly correlated with each other. After removing variables that are highly correlated, there are 160 remaining features. 
+In their monthly reports, FRED makes minor adjustments to metrics and reports them as separate features. For instance, both seasonally adjusted and non seasonally adjusted numbers are reported for most metrics. To eliminate the double-counting variables and reduce multicollinearity issues, if a variable and another variable have a higher than 0.9 correlation with each other, I only kept one of the variables. Correlation is more informative than covariance when deciding which variables to remove because it does not depend on the scales of the features and always lies in the interval [-1,1]. The closer the correlation is to the endpoints of this interval, the more strongly the features are related. If the correlation is very high, it is likely the variables measure the same thing. Additionally, due to potential multicolinearity issues, I decided that it was better to remove features that are highly correlated with each other. After removing variables that are highly correlated, there are 160 remaining features. 
 
 **Removed columns were the standard deviation is equal to zero**
 
@@ -140,7 +140,7 @@ I calculated the standard deviations of all variables. If a variable had a stand
 
 Since each observation is indexed by month, I was concerned that samples of consecutive months would be strongly correlated (i.e. the unemployment rate of a given month would depend largely on the unemployment rate from the previous month). Intuitively, a time series is weakly dependent if events in the past have only a small influence on the value of the time series at the present moment^[https://towardsdatascience.com/time-series-analysis-part-i-3be41995d9ad]. 
 
-While the unemployment rate yesterday has a large influence on the unemployment rate today, the unemployment rate last month has only a small influence on the unemployment rate this month. To test this hypothesis, I calculated the mean percent change between observations to be 0.225%. Since the standard deviation is 1.68%, there is most likely some dependence between observations, but this dependence is not too high. Also, Brookings finds that monthly unemployment rates behave similarly to independent random variables, since they can spike or drop at any time^[https://www.brookings.edu/wp-content/uploads/2016/07/2013b_coibion_unemployment_persistence.pdf]. Therefore, I can still conduct my analysis. 
+While the unemployment rate yesterday has a large influence on the unemployment rate today, the unemployment rate last month has only a small influence on the unemployment rate this month. To test this hypothesis, I calculated the mean percent change between observations to be 0.225%. Since the standard deviation of the unemployment rate is 1.68%, there is most likely some dependence between observations, but this dependence is not too high. Also, Brookings finds that monthly unemployment rates behave similarly to independent random variables, since they can spike or drop at any time^[https://www.brookings.edu/wp-content/uploads/2016/07/2013b_coibion_unemployment_persistence.pdf]. Therefore, I can still conduct my analysis. 
 
 In an optimal world, I would be able to time-average the data over a larger time frame. However, time-averaging would have produced too small of a data frame here. Thus, I proceeded with caution, knowing that the independent and identically distributed or i.i.d. assumption was not 100% met.  
 
@@ -152,7 +152,7 @@ In an optimal world, I would be able to time-average the data over a larger time
 
 **Explanatory Variables**
 
-The cleaned data set includes 158 features, and documentation of each feature can be found in Table \@ref(tab:vars-appendix). 156 of the explanatory variables consist of employment-related variables and economic-related variables that are pulled from the employment situation and GDP reports. Additionally, I included both inflation and the federal funds rate as features. All features are continuous.
+The cleaned data set includes 158 features, and documentation of each feature can be found at the end of this report. 156 of the explanatory variables consist of employment-related variables and economic-related variables that are pulled from the employment situation and GDP reports. Additionally, I included both inflation and the federal funds rate as features. All features are continuous.
 
 *Detailed descriptions of added variables:*
 
@@ -201,7 +201,7 @@ knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/all-year
 
 As mentioned above, many of the original features had high covariation since FRED reports include adjusted and unadjusted metrics. After cleaning the data to adjust for multicollinearity issues, no features in the data set have a correlation of 0.9 or above with each other. 
 
-While there are far too many features to create a correlation plot with every feature, I randomly subsampled 30 features to create a correlation matrix. Figure \@ref(fig:corr-plot-subsample) demonstrates how the majority of the features are not highly correlated with each other. Though I do not believe multicollinearity is a major cause for concern after cleaning the data set, penalized regression techniques (e.g. lasso, ridge) will help adjust for possible multicollinearity issues. 
+While there are far too many features to create a correlation plot with every feature, I randomly subsampled 30 features to create a correlation matrix. Figure \@ref(fig:corr-plot-subsample) demonstrates how the majority of the features are not highly correlated with each other. Though I do not believe multicollinearity is a major cause for concern after cleaning the data set, penalized regression techniques (specifically, ridge) will help adjust for possible multicollinearity issues. 
 
 ```{r corr-plot-subsample, fig.align='center', fig.cap = "Correlation plot for a subsample of 30 randomly selected variables ", out.width="60%", echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/corr-plot-subsample.png")
@@ -279,12 +279,12 @@ knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/phillips
 
 Next, I examined whether the unemployment rate is negatively correlated with the federal funds rate. I only looked at the last 20 years because line plots with all 585 observations can be hard to interpret due to a few outliers. Figure \@ref(fig:fed-funds-plot) implies a direct, negative linear relationship between the federal funds rate and the unemployment rate. Thus, Figure \@ref(fig:fed-funds-plot) implies when the unemployment rate is high, the federal funds rate will be low and vice versa.
 
-```{r fed-funds-plot, fig.align='center', fig.cap = "Unemploy by Federal Funds Rate", out.width="40%", echo = FALSE}
+```{r fed-funds-plot, fig.align='center', fig.cap = "Unemployment Rate by Federal Funds Rate", out.width="40%", echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/fed-funds-plot.png")
 ```
 ## Variation in features  {-}
 
-I also also curious to examine the variation in features. I randomly selected four features to look at: the number of goods producing employees (CES0600000006), the change in real motor vechile output (A133RL1Q225SBEA), the change in private inventories (A014RE1A156NBEA), and the change in real gross national product (A001RO1Q156NBEA). These features are plotted in Figure \@ref(fig:variation-features).While three out of four of the features appear to be approximately normally distributed, the change in real motor vechicle output is skewed to the right because of two large outliars. If I had more time, I would look at the varation in every feature. 
+I also also curious to examine the variation in features. I randomly selected four features to look at: the number of goods producing employees (CES0600000006), the change in real motor vechile output (A133RL1Q225SBEA), the change in private inventories (A014RE1A156NBEA), and the change in real gross national product (A001RO1Q156NBEA). These features are plotted in Figure \@ref(fig:variation-features). While three out of four of the features appear to be approximately normally distributed, the change in real motor vechicle output is skewed to the right because of two large outliars. If I had more time, I would look at the varation in every feature. 
 
 ```{r variation-features, fig.align='center', fig.cap = "Histograms that show variation of four randomly selected features, where the red vertical line represents the median value", out.width="50%", echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/var-features-plot.png")
@@ -296,7 +296,7 @@ knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/var-feat
 
 ## Ordinary least squares {-}
 
-To start, I created an ordinary least squares model that included all explanatory variables. Based on the regression summary, the ordinary least squares model has an r-squared value of 0.991, which implies that the features explain about 99.1% of the variation in the unemployment rate. Additionally, there are 34 statistically significant features in the model at a 0.05 threshold. (Table \@ref(tab:lm-coefs)) shows the features with the lowest p-values.
+To start, I created an ordinary least squares model that included all explanatory variables. Based on the regression summary, the ordinary least squares model has an r-squared value of 0.991, which implies that the features explain about 99.1% of the variation in the unemployment rate. Additionally, there are 34 statistically significant features in the model at a 0.05 threshold. Table \@ref(tab:lm-coefs) shows the features with the lowest p-values. 
 
 ```{r lm-coefs,  message = FALSE, echo = FALSE}
 #down p-values for the least squares model 
@@ -331,9 +331,9 @@ While the ordinary least squares method seems to work well, training a model wit
 
 ## Ridge Regression {-}
 
-The ridge regression adds a penalty to coefficients to disincentivize large values. The larger lambda is, the more of a penalty there is. If lambda equals 0, the ridge regression produces the same results as the ordinary least squares model. When lambda approaches infinity, only the intercept is left. Since lambda controls the flexibility of the ridge fit, I tuned my model to find the optimal value of lambda. For ridge regression, all features are assumed on the same scale. However, feature standardization is done behind the scenes in R. Another benefit of the ridge model is that while linear regression coefficients for correlated features tend to be unstable, penalized regressions provide a more stable way of "splitting the credit" amongst variables. 
+The ridge regression adds a penalty to coefficients to disincentivize large values. The larger lambda is, the more of a penalty there is. If lambda equals 0, the ridge regression produces the same results as the ordinary least squares model. When lambda approaches infinity, only the intercept is left. Since lambda controls the flexibility of the ridge fit, I tuned my model to find the optimal value of lambda. For ridge regression, all features are assumed to be on the same scale. However, feature standardization is done behind the scenes in R. Another benefit of the ridge model is that while linear regression coefficients for correlated features tend to be unstable, penalized regressions provide a more stable way of "splitting the credit" amongst variables. 
 
-To train my model, I fit a 10-fold cross-validated ridge regression model to the training data. In (Figure \@ref(fig:ridge-cv-plot)) we have the CV plot for the model. Corresponding to the right vertical dashed line on the plot (on the log scale), the value of lambda selected according to the one-standard-error rule is about 0.111.
+To train my model, I fit a 10-fold cross-validated ridge regression model to the training data. In Figure \@ref(fig:ridge-cv-plot) I have the CV plot for the model. Corresponding to the right vertical dashed line on the plot (on the log scale), the value of lambda selected according to the one-standard-error rule is about 0.111.
 
 ```{r ridge-cv-plot, out.width = "50%", fig.cap = "Ridge CV plot: This is the CV plot for the 10-fold cross-validated ridge regression model on the training data", fig.align='center', echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/ridge-cv-plot.png")
@@ -341,7 +341,7 @@ knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/ridge-cv
 
 Next, I used plot_glmnet to visualize the ridge regression fitted coefficients, highlighting the six features with the highest absolute standardized coefficients. It appears that none of the coefficients change signs as lambda increases. 
 
-Table \@ref(tab:ridge-coefficients) shows the features with the highest standardized coefficients and provides their descriptions. Coefficents in Table \@ref(tab:ridge-coefficients) can be interpreted as follows: for every 1 standard deviation increase in the given featue there is a "value of the coefficent" standard deviation change in the unemployment rate. Therefore, positive coefficients correspond to increases in the unemployment rate and negative coefficients correspond to decreases in the unemployment rate. One of the limitations of the ridge model is that I cannot obtain p-values from the ridge regression. Thus, the ridge model is only a prediction tool and cannot be used to determine statistical significance. 
+Table \@ref(tab:ridge-coefficients) shows the features with the highest standardized coefficients and provides their descriptions. Coefficents in Table \@ref(tab:ridge-coefficients) can be interpreted as follows: for every 1 standard deviation increase in the given feature there is a "value of the coefficent" standard deviation change in the unemployment rate. Therefore, positive coefficients correspond to increases in the unemployment rate and negative coefficients correspond to decreases in the unemployment rate. One of the limitations of the ridge model is that I cannot obtain p-values from the ridge regression. Thus, the ridge model is only a prediction tool and cannot be used to determine statistical significance. 
 
 ```{r ridge-trace-plot, out.width = "50%", fig.cap = "Ridge trace plot with 6 features with highest magnitude highlighted", fig.align='center', echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/ridge_coef_plot.png")
@@ -382,13 +382,13 @@ Like the ridge regression model, the LASSO model includes a penalty term that bi
 
 I fit a 10-fold cross-validated LASSO regression to the training data. In Figure \@ref(fig:lasso-cv-plot), I have the CV plot for the model. Corresponding to the right vertical dashed line on the plot (on the log scale), the value of lambda selected according to the one-standard-error rule is about 0.00316. 80 features (excluding the intercept) are selected if lambda is chosen according to the one- standard-error rule. 
 
-Figure \@ref(fig:lasso-trace-plot) shows the LASSO trace plot with the first 6 features to enter the model highlighted and Table \@ref(tab:lasso-coefficients) shows the top 10 selected features with the highest standardized coefficents. Coefficents in Table \@ref(tab:ridge-coefficients) can be interpreted as follows: for every 1 standard deviation increase in the given featue there is a "value of the coefficent" standard deviation change in the unemployment rate. Therefore, positive coefficients correspond to increases in the unemployment rate and negative coefficients correspond to decreases in the unemployment rate. 
+Figure \@ref(fig:lasso-trace-plot) shows the LASSO trace plot with the first 6 features to enter the model highlighted and Table \@ref(tab:lasso-coefficients) shows the top 10 selected features with the highest standardized coefficents. Coefficents in Table \@ref(tab:ridge-coefficients) can be interpreted as follows: for every 1 standard deviation increase in the given feature there is a "value of the coefficent" standard deviation change in the unemployment rate. Therefore, positive coefficients correspond to increases in the unemployment rate and negative coefficients correspond to decreases in the unemployment rate. 
 
 ```{r lasso-cv-plot, out.width = "50%", fig.cap = "Lasso CV plot: This is the CV plot for the 10-fold cross-validated LASSO regression model on the training data.", fig.align='center', echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/lasso-cv-plot.png")
 ```
 
-Examining the LASSO trace plot in Figure \@ref(fig:lasso-trace-plot), I see that lambda decreases from left to right. Thus, depreciation of fixed assets / real consumption of fixed capital (A024RL1A225NBEA) is the first feature to enter the model as lambda decreases, and the coefficient is negative. Other features with negative standardized that enter the mdoel in the first six are the private domestic investment in nonresidential structures (A009RO1Q156NBE) and the average weekly hours of production for manufacturing employees (AWHMAN). Features with positive standardized coefficients include net government lending/borrowing (A030RC1Q027SBE), the number of goods-producing employees (CES1000000006), and the number of female mining and logging employees (CES1000000010).   
+Examining the LASSO trace plot in Figure \@ref(fig:lasso-trace-plot), I see that lambda decreases from left to right. Thus, depreciation of fixed assets / real consumption of fixed capital (A024RL1A225NBEA) is the first feature to enter the model as lambda decreases, and the coefficient is negative. Other features with negative standardized coefficents that enter the model in the first six are the private domestic investment in nonresidential structures (A009RO1Q156NBE) and the average weekly hours of production for manufacturing employees (AWHMAN). Features with positive standardized coefficients include net government lending/borrowing (A030RC1Q027SBE), the number of goods-producing employees (CES1000000006), and the number of female mining and logging employees (CES1000000010).   
 
 ```{r lasso-trace-plot, out.width = "50%", fig.cap = "Lasso trace plot with first 6 features to enter the model highlighted", fig.align='center', echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/lasso_coef_plot.png")
@@ -429,7 +429,7 @@ lasso_features %>% #only select top 10
 
 The last regression method I used was the elastic net regression, which combines the penalties from ridge and LASSO regression techniques. When alpha = 0, a ridge regression model is produced. When alpha = 1, a LASSO regression is produced. In an elastic net, alpha is between 0 and 1,  which creates a ridge-like shrinkage as well as a LASSO-like selection. As long as alpha is greater than 0, shrinkage will occur. 
 
-I need to tune the model for both alpha and lambda. To choose alpha, I cross-validated over alpha and lambda. First, I choose alpha to minimize CV error, and then I selected lambda according to the one-standard-error rule. Figure \@ref(fig:elastic-net-CV-plot) shows CV error for each value of alpha. Alpha is set to 0.343, corresponding to the vertical dashed line on the plot, and lambda selected according to the one-standard-error rule is about 0.00579. Since alpha is closer to 0, the elastic net model is more similar to the ridge regression. 
+I need to tune the model for both alpha and lambda. To chose alpha, I cross-validated over alpha and lambda. First, I choose alpha to minimize CV error, and then I selected lambda according to the one-standard-error rule. Figure \@ref(fig:elastic-net-CV-plot) shows CV error for each value of alpha. Alpha is set to 0.343, corresponding to the vertical dashed line on the plot, and lambda selected according to the one-standard-error rule is about 0.00579. Since alpha is closer to 0, the elastic net model is more similar to the ridge regression. 
 
 ```{r elastic-net-CV-plot, out.width = "40%", fig.cap = "Elastic Net CV plot", fig.align='center', echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/cv_elnet_plot.png")
@@ -479,7 +479,7 @@ Next, I will predict the U.S. unemployment rate using tree-based methods. Based 
 
 While I did not use a simple decision tree to predict the unemployment rate, Figure \@ref(fig:basic-tree-plot) visualizes what a decision tree looks like for the data set. Decision trees partition the feature space into axis-aligned nested rectangles, producing a constant prediction for feature vectors in each rectangle. Behind the scenes, the random forest model and boosted model create trees similar to the one in Figure \@ref(fig:basic-tree-plot).
 
-```{r basic-tree-plot, out.width = "60%", fig.cap = "", fig.align='center', echo = FALSE}
+```{r basic-tree-plot, out.width = "60%", fig.cap = "Basic decision tree used to demonstrate the types of trees built behind the scenes in random forest and boosted tree-based models", fig.align='center', echo = FALSE}
 knitr::include_graphics("~/Desktop/STAT471/unemployment-project/results/decision-tree-plot.png")
 ```
 
@@ -742,7 +742,7 @@ It is hard to explain why the unemployment rate increases when farm output incre
 
 ## Limitations {-}
 
-### Dataset limitations
+**Dataset limitations**
 
 There are four data-related limitations of my analysis:
 
@@ -763,7 +763,7 @@ might need to be taken with a grain of salt.
 
 Since many variables had high multicollinearity, I systematically dropped variables with higher than 0.9 correlation with each other. While I kept 1 of the correlated variables, I might have dropped variables that were more predictive of the unemployment rate during this process. However, since the variables dropped are highly correlated with variables left in the analysis, I do not believe this is a major issue. 
 
-### Analysis limitations
+**Analysis limitations**
 
 Since I used data from 1960 to 2020 to train my models, I cannot be certain that the relationships identified in my model will still be true in the future. Additionally, while splitting the data into training and testing datasets allows for a more unbiased test of the models, it also adds randomness to my analysis since observations are randomly assigned to either the test or train data set. It is possible that if I split the data again, without using the same seed, the variables selected by each model could have changed. Next, although I trained my models of 158 variables, my analysis incorporates only variables found in two reports plus inflation and the federal funds rate. The model predicts high unemployment rates in 2020 due to economic factors such as net government lending and the number of manufacturing employees. However, high unemployment in 2020 is likely due to health variables not found in my data set.
 
@@ -775,7 +775,7 @@ To compensate for the limitations mentioned above, I would like to use a more up
 
 # Appendix: Descriptions of features {#appendix}
 
-```{r vars-appendix, echo = FALSE}
+```{r vars-appendix, message = FALSE, echo = FALSE}
 #seperate variable IDs into 5 categories, so they can be printed on 5 pages
 var_names_1 = var_names[1:37, ]
 var_names_2 = var_names[38:70, ]
