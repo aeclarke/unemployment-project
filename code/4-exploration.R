@@ -33,6 +33,15 @@ ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/histogram_unem
        width = 8, 
        height = 5)
 
+#accesss independence of time series data
+pct <- function(x) {x / lag(x) - 1}
+combinded = rbind(econ_train, econ_test) 
+mean_change = combinded %>% 
+  mutate(change = UNRATE - lead(UNRATE)) %>% 
+  dplyr::select(change) %>% na.omit() %>%
+  summarise(mean(abs(change)))  
+sd_UNRATE = sd(combinded$UNRATE)
+
 # which 10 years have the highest unemployment rates
 top_10_unemploy = econ_train %>%
   mutate(year = year(date)) %>% #add year columns

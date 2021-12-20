@@ -21,8 +21,8 @@ variable_names = read_tsv(file = "~/Desktop/STAT471/unemployment-project/data/cl
 source("~/Desktop/STAT471/unemployment-project/code/functions/plot_glmnet.R")
 
 # remove date column
-unemploy_train = unemploy_train %>% select(-date)
-unemploy_test = unemploy_test %>% select(-date)
+unemploy_train = unemploy_train %>% dplyr::select(-date)
+unemploy_test = unemploy_test %>% dplyr::select(-date)
 
 ## Regression Tree 
 
@@ -30,10 +30,18 @@ unemploy_test = unemploy_test %>% select(-date)
 tree_fit= rpart(UNRATE ~ ., data = unemploy_train)
 # save basic tree
 save(tree_fit, file = "~/Desktop/STAT471/unemployment-project/results/tree_fit.Rda")
-# create plot 
-tree_fit_plot = rpart.plot(tree_fit)
+# create and save basic tree plot 
+png(width = 7, 
+    height = 6,
+    res = 300,
+    units = "in", 
+    filename = "results/decision-tree-plot.png")
+rpart.plot(tree_fit)
+dev.off()
+
 # top 10 variable importance 
 top_10_tree = rownames(data.frame(tree_fit$variable.importance)%>% arrange(desc(tree_fit.variable.importance)) %>% head(10))
+
 
 # create cp table 
 cp_table = printcp(tree_fit) %>% as_tibble()
@@ -83,20 +91,37 @@ ggsave(filename =
        device = "png", 
        width = 5, 
        height = 4)
-
 #set mtry equal to optimal value, leave ntree = 500 (default)
-rf_fit = randomForest(UNRATE  ~ ., mtry = 15, importance = TRUE, data = unemploy_train)
+rf_fit = randomForest(UNRATE  ~ ., mtry = 17, importance = TRUE, ntree = 300, data = unemploy_train)
 # Check to make sure using enough trees
 # OOB error by number of trees 
-OBB_trees_rf_fit = plot(rf_fit)
+png(width = 7, 
+    height = 4,
+    res = 300,
+    units = "in", 
+    filename = "results/OBB_error_num_tree_rf.png")
+plot(rf_fit)
+dev.off()
 # save the random forest
 save(rf_fit, file = "~/Desktop/STAT471/unemployment-project/results/rf_fit.Rda")
-
 # plot variable importance, onlt include top 10 variables 
-rf_var_imp = varImpPlot(rf_fit, n.var = 10)
+# create and save var importance plots
+png(width = 7, 
+    height = 4,
+    res = 300,
+    units = "in", 
+    filename = "results/var-imp-rf.png")
+varImpPlot(rf_fit, n.var = 10)
+dev.off()
+
+#save var importances 
+var_imp_rf = data.frame(varImpPlot(rf_fit, n.var = 10)[, 1]) 
+var_imp_rf = cbind(rownames(var_imp_rf), var_imp_rf)
+write_tsv(var_imp_rf, file = "~/Desktop/STAT471/unemployment-project/results/var_imp_rf.tsv")
 
 
-## Boosting model 
+
+# boosting
 
 #tuning interaction depth by trying out a few different values
 set.seed(1)
@@ -146,27 +171,45 @@ ggsave(filename =
 gbm_fit_optimal = gbm_fit_3
 # Save optimal gbm model 
 save(gbm_fit_optimal, file = "~/Desktop/STAT471/unemployment-project/results/gbm_fit_optimal.Rda")
+
 optimal_num_trees = gbm.perf(gbm_fit_3, plot.it = FALSE) 
-
+# plot and save optimal_num_trees
+png(width = 6, 
+    height = 4,
+    res = 300,
+    units = "in", 
+    filename = "results/gbm-optimal-trees.png")
+gbm.perf(gbm_fit_3, plot.it = TRUE) 
+dev.off()
 # Interpret tuned model
-summary(gbm_fit_optimal, n.trees = optimal_num_trees, plotit = FALSE)
+# create and save var importance plots
 
-# Create ppartial dependence plots  
-pdp_employees_mining_logging = as.ggplot(plot(gbm_fit_optimal, i.var = "CES1000000006", n.trees = optimal_num_trees))
-pdp_real_consumption_fixed_capital = as.ggplot(plot(gbm_fit_optimal, i.var = "A262RL1A225NBEA", n.trees = optimal_num_trees))
-pdp_gov_social_benefits = as.ggplot(plot(gbm_fit_optimal, i.var = "A1589C1A027NBEA", n.trees = optimal_num_trees))
-pdp_farm_output = as.ggplot(plot(gbm_fit_optimal, i.var = "A365RG3A086NBEA", n.trees = optimal_num_trees))
+# save gbm optimal summary
+summary(gbm_fit_optimal, n.trees = optimal_num_trees, plotit = FALSE) %>%
+  write_tsv("results/gbm-summary.tsv")
+
+#vars for pdp plots
+pdp_vars = summary(gbm_fit_optimal, n.trees = optimal_num_trees, plotit = FALSE) %>% 
+  dplyr::select(var) %>% head(10) %>% pull()
+
+# Create partial dependence plots  
+p1 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[1], n.trees = optimal_num_trees))
+p2 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[2], n.trees = optimal_num_trees))
+p3 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[3], n.trees = optimal_num_trees))
+p4 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[4], n.trees = optimal_num_trees))
+p5 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[5], n.trees = optimal_num_trees))
+p6 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[6], n.trees = optimal_num_trees))
+p7 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[7], n.trees = optimal_num_trees))
+p8 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[8], n.trees = optimal_num_trees))
+p9 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[9], n.trees = optimal_num_trees))
+p10 = as.ggplot(plot(gbm_fit_optimal, i.var = pdp_vars[10], n.trees = optimal_num_trees))
+
+pdp_plots = plot_grid(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, nrow = 3)
+
 
 # Save partial dependence plots 
-ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/pdp_employees_mining_logging.png", 
-       plot = pdp_employees_mining_logging, 
-       device = "png")
-ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/pdp_real_consumption_fixed_capital.png", 
-       plot = pdp_real_consumption_fixed_capital, 
-       device = "png")
-ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/pdp_gov_social_benefits", 
-       plot = pdp_gov_social_benefits, 
-       device = "png")
-ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/pdp_farm_output", 
-       plot = pdp_farm_output, 
+ggsave(filename = "~/Desktop/STAT471/unemployment-project/results/pdp_plots.png", 
+       plot = pdp_plots, 
+       width = 12, 
+       height = 10,
        device = "png")
